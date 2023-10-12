@@ -1,2 +1,4 @@
-package com.cac.tpcacfinal.entities.DTO;public class UserDTOTest {
+package com.cac.tpcacfinal.entities.DTO;
+
+public class UserDTOTest {
 }

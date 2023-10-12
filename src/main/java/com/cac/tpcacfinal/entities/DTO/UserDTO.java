@@ -1,2 +1,4 @@
-package com.cac.tpcacfinal.entities.DTO;public class UserDTO {
+package com.cac.tpcacfinal.entities.DTO;
+
+public class UserDTO {
 }

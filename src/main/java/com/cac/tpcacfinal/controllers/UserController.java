@@ -1,2 +1,7 @@
-package com.cac.tpcacfinal.controllers;public class UserController {
+package com.cac.tpcacfinal.controllers;
+
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class UserController {
 }

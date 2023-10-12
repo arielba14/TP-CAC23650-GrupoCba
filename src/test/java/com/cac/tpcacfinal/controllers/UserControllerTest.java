@@ -1,2 +1,4 @@
-package com.cac.tpcacfinal.controllers;public class UserControllerTest {
+package com.cac.tpcacfinal.controllers;
+
+public class UserControllerTest {
 }

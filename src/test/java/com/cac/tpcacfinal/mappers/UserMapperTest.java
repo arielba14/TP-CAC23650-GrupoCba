@@ -1,4 +1,4 @@
 package com.cac.tpcacfinal.mappers;
 
-public class UserMappTest {
+public class UserMapperTest {
 }

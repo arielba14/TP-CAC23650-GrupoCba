@@ -1,2 +1,4 @@
-package com.cac.tpcacfinal.entities;public class UserTest {
+package com.cac.tpcacfinal.entities;
+
+public class UserTest {
 }
