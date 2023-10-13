@@ -1,6 +1,7 @@
 package com.cac.tpcacfinal.services;
 
 import com.cac.tpcacfinal.entities.Dto.UserDto;
+import com.cac.tpcacfinal.entities.User;
 import com.cac.tpcacfinal.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,23 +10,19 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService{
     @Autowired
     UserRepository userRepository;
 
-    public List<UserDto> getUsers(){
+    public List<User> getUsers(){
         return userRepository.findAll();
     }
 
-    public Optional<UserDto> getUserById(Long id){
-        return userRepository.findById(id);
+    public User getUserById(Long id){
+        return userRepository.findById(id).orElse(null);
     }
 
-    public void saveUser(UserDto user){
-        userRepository.save(user);
-    }
-
-    public void updateUser(UserDto user){
+    public void saveUser(User user){
         userRepository.save(user);
     }
 
@@ -33,7 +30,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void deleteUser(UserDto user){
+    public void deleteUser(User user){
         userRepository.delete(user);
     }
 }
