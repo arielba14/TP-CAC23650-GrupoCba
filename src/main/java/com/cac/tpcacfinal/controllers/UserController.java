@@ -40,12 +40,8 @@ public class UserController {
         service.saveUser(userId);
     }
 
-    @DeleteMapping(value = "deleteUser")
-    public void deleteUser(User user){
-        service.deleteUser(user);
-    }
     @DeleteMapping(value = "deleteUser/{id}")
-    public void deleteUserById(Long id){
+    public void deleteUserById(@PathVariable Long id){
         service.deleteUserById(id);
     }
 
