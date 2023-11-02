@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -13,9 +15,13 @@ import lombok.Setter;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long user;
-    private String alias;
+    private Long id;    //identificación de la cuenta
+    @ManyToOne  //una cuenta es de un solo usuario
+    private User user;  //el titular de la cuenta
+    private String alias;   //alias
     private String tipo;    //ver si lo hacemos enum
+    private Double amount;  //saldo de la cuenta
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transaction> transactions;
 
 }

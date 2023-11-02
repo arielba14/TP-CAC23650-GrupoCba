@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -15,9 +17,11 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String username;
-    private String password;
-    private String name;
+    private Long id;    //id de la cuenta
+    private String username;    //nombre de usuario
+    private String password;    //password
+    private String name;        //nombre del titular
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Account> accounts; //cuentas que tiene el usuario
 
 }
