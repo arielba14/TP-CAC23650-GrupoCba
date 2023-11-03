@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TPcacFinalApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(TPcacFinalApplication.class, args);
+        System.out.println("Todo ha iniciado con éxito!!");
     }
 
 }

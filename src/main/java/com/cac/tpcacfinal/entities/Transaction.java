@@ -12,6 +12,8 @@ import java.util.Date;
 @Getter
 @Setter
 @Table (name = "transacciones")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,10 +1,7 @@
 package com.cac.tpcacfinal.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.util.List;
@@ -13,6 +10,8 @@ import java.util.List;
 @Getter
 @Setter
 @Table (name = "usuarios")
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id
