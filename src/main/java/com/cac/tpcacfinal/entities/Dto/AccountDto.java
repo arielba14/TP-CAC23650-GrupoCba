@@ -1,6 +1,7 @@
 package com.cac.tpcacfinal.entities.Dto;
 
 
+import com.cac.tpcacfinal.entities.AccountType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 public class AccountDto {
     private Long id;
     private String alias;
-    private String tipo;
+    private AccountType tipo;
     private Double amount;
     private UserDto user;
     private List<Long> transactions;

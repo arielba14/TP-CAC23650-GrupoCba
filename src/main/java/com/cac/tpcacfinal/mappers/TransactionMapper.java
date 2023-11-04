@@ -23,7 +23,7 @@ public class TransactionMapper {
         dto.setDate(transaction.getDate());
         dto.setDescription(transaction.getDescription());
         if (transaction.getAccount() != null){
-
+            dto.setAccount(AccountMapper.accountToDtoMap(transaction.getAccount()));
         }
         return dto;
     }

@@ -19,7 +19,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;    //identificación de la cuenta
     private String alias;   //alias
-    private String tipo;    //ver si lo hacemos enum
+    private AccountType tipo;
     private Double amount;  //saldo de la cuenta
     @ManyToOne  //una cuenta es de un solo usuario
     private User user;  //el titular de la cuenta

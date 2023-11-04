@@ -1,6 +1,6 @@
 package com.cac.tpcacfinal.controllers;
 
-import com.cac.tpcacfinal.entities.Dto.UserDto;
+
 import com.cac.tpcacfinal.entities.User;
 import com.cac.tpcacfinal.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,11 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    private UserService service;
+    private final UserService service;
+
+    public UserController(UserService service){
+        this.service = service;
+    }
 
     @GetMapping(value = "/users")
     public List<User> getUsers(){
@@ -26,7 +30,7 @@ public class UserController {
         return service.getUserById(id);
     }
 
-    @PostMapping(value = "saveUser")
+    @PostMapping(value = "insertUser")
     public void saveUser(@RequestBody User user){
         service.saveUser(user);
     }
