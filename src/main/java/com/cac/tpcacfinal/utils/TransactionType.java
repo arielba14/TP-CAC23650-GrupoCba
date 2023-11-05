@@ -1,4 +1,4 @@
-package com.cac.tpcacfinal.entities;
+package com.cac.tpcacfinal.utils;
 
 public enum TransactionType {
     CREDIT,

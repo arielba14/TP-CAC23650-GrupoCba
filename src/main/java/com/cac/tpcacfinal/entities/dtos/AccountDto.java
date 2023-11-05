@@ -1,7 +1,7 @@
-package com.cac.tpcacfinal.entities.Dto;
+package com.cac.tpcacfinal.entities.dtos;
 
 
-import com.cac.tpcacfinal.entities.AccountType;
+import com.cac.tpcacfinal.utils.AccountType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

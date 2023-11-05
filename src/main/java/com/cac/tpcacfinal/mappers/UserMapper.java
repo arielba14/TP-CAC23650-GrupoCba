@@ -1,7 +1,7 @@
 package com.cac.tpcacfinal.mappers;
 
 import com.cac.tpcacfinal.entities.Account;
-import com.cac.tpcacfinal.entities.Dto.UserDto;
+import com.cac.tpcacfinal.entities.dtos.UserDto;
 import com.cac.tpcacfinal.entities.User;
 import lombok.experimental.UtilityClass;
 

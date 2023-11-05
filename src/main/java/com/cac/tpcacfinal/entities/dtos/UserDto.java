@@ -1,4 +1,4 @@
-package com.cac.tpcacfinal.entities.Dto;
+package com.cac.tpcacfinal.entities.dtos;
 
 
 import lombok.*;

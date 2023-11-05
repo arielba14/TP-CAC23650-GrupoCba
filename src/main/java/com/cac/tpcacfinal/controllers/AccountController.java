@@ -38,7 +38,7 @@ public class AccountController {
         accountId.setAlias(account.getAlias());
         accountId.setAmount(account.getAmount());
         accountId.setUser(account.getUser());
-        accountId.setTipo(account.getTipo());
+        accountId.setType(account.getType());
         accountId.setTransactions(account.getTransactions());
         service.saveAccount(accountId);
     }

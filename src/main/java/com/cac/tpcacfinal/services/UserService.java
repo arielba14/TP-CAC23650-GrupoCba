@@ -1,13 +1,11 @@
 package com.cac.tpcacfinal.services;
 
-import com.cac.tpcacfinal.entities.Dto.UserDto;
 import com.cac.tpcacfinal.entities.User;
 import com.cac.tpcacfinal.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService{

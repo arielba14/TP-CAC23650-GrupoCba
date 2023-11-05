@@ -1,5 +1,6 @@
 package com.cac.tpcacfinal.entities;
 
+import com.cac.tpcacfinal.utils.AccountType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,9 +20,11 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;    //identificación de la cuenta
     private String alias;   //alias
-    private AccountType tipo;
+    @Enumerated(EnumType.STRING)
+    private AccountType type;
     private Double amount;  //saldo de la cuenta
     @ManyToOne  //una cuenta es de un solo usuario
+    @JoinColumn(name="user_id", referencedColumnName = "id")
     private User user;  //el titular de la cuenta
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;

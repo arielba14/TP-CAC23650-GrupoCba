@@ -1,7 +1,6 @@
 package com.cac.tpcacfinal.mappers;
 
-import com.cac.tpcacfinal.entities.Dto.AccountDto;
-import com.cac.tpcacfinal.entities.Dto.TransactionDto;
+import com.cac.tpcacfinal.entities.dtos.TransactionDto;
 import com.cac.tpcacfinal.entities.Transaction;
 import lombok.experimental.UtilityClass;
 
