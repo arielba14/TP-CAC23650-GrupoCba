@@ -19,6 +19,7 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;    //identificación de la cuenta
+    private Long number;
     private String alias;   //alias
     @Enumerated(EnumType.STRING)
     private AccountType type;

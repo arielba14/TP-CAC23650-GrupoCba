@@ -12,9 +12,12 @@ import java.util.List;
 public class AccountMapper {
     public Account dtoToAccountMap(AccountDto dto){
         Account account = new Account();
-        account.setType(dto.getTipo());
+        account.setId(dto.getId());
+        account.setType(dto.getType());
         account.setAlias(dto.getAlias());
+        account.setNumber(dto.getNumber());
         account.setAmount(dto.getAmount());
+        account.setNumber(dto.getNumber());
         return account;
     }
 
@@ -22,7 +25,8 @@ public class AccountMapper {
         AccountDto dto = new AccountDto();
         List<Long> transactions = new ArrayList<>();
         dto.setId(account.getId());
-        dto.setTipo(account.getType());
+        dto.setType(account.getType());
+        dto.setNumber(account.getNumber());
         dto.setAlias(account.getAlias());
         dto.setAmount(account.getAmount());
         if (account.getUser() != null){

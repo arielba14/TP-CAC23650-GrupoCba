@@ -16,8 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 public class AccountDto {
     private Long id;
+    private Long number;
     private String alias;
-    private AccountType tipo;
+    private AccountType type;
     private Double amount;
     private UserDto user;
     private List<Long> transactions;

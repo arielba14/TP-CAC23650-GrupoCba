@@ -2,12 +2,13 @@ package com.cac.tpcacfinal.controllers;
 
 
 import com.cac.tpcacfinal.entities.User;
+import com.cac.tpcacfinal.entities.dtos.UserDto;
+import com.cac.tpcacfinal.mappers.UserMapper;
 import com.cac.tpcacfinal.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -21,12 +22,12 @@ public class UserController {
     }
 
     @GetMapping(value = "/users")
-    public List<User> getUsers(){
+    public List<UserDto> getUsers(){
         return service.getUsers();
     }
 
     @GetMapping(value = "/user/{id}")
-    public User getUserById(@PathVariable Long id){
+    public UserDto getUserById(@PathVariable Long id){
         return service.getUserById(id);
     }
 
@@ -37,10 +38,11 @@ public class UserController {
 
     @PutMapping(value = "updateUser/{id}")
     public void updateUser(@PathVariable Long id, @RequestBody User user){
-        User userId = service.getUserById(id);
+        User userId = UserMapper.dtoToUserMap(service.getUserById(id));
         userId.setUsername(user.getUsername());
         userId.setPassword(user.getPassword());
         userId.setName(user.getName());
+        userId.setAccounts(user.getAccounts());
         service.saveUser(userId);
     }
 
