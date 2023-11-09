@@ -8,9 +8,12 @@ import lombok.experimental.UtilityClass;
 public class TransactionMapper {
     public Transaction dtoToTransactionMap(TransactionDto dto){
         Transaction transaction = new Transaction();
+        transaction.setId(dto.getId());
+        transaction.setAmount(dto.getAmount());
         transaction.setDescription(dto.getDescription());
         transaction.setType(dto.getType());
         transaction.setDate(dto.getDate());
+        transaction.setAccount(AccountMapper.dtoToAccountMap(dto.getAccount()));
         return transaction;
     }
 

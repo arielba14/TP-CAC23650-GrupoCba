@@ -1,8 +1,6 @@
 package com.cac.tpcacfinal.controllers;
 
-import com.cac.tpcacfinal.entities.Transaction;
 import com.cac.tpcacfinal.entities.dtos.TransactionDto;
-import com.cac.tpcacfinal.mappers.TransactionMapper;
 import com.cac.tpcacfinal.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,13 +28,13 @@ public class TransactionController {
     }
 
     @PostMapping(value = "/insertTransaction")
-    public void saveTransaction(@RequestBody Transaction transaction){
+    public void saveTransaction(@RequestBody TransactionDto transaction){
         service.saveTransaction(transaction);
     }
 
     @PutMapping (value = "/updateTransaction")
-    public void updateTransaction(@PathVariable Long id, @RequestBody Transaction transaction){
-        Transaction transactionId = TransactionMapper.dtoToTransactionMap(service.getTransactionById(id));
+    public void updateTransaction(@PathVariable Long id, @RequestBody TransactionDto transaction){
+        TransactionDto transactionId = service.getTransactionById(id);
         transactionId.setAccount(transaction.getAccount());
         transactionId.setType(transaction.getType());
         transactionId.setDate(transaction.getDate());

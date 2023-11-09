@@ -1,6 +1,6 @@
 package com.cac.tpcacfinal.services;
 
-import com.cac.tpcacfinal.entities.Transaction;
+
 import com.cac.tpcacfinal.entities.dtos.TransactionDto;
 import com.cac.tpcacfinal.mappers.TransactionMapper;
 import com.cac.tpcacfinal.repositories.TransactionRepository;
@@ -24,8 +24,9 @@ public class TransactionService {
         return TransactionMapper.transactionToDtoMap(transactionRepository.findById(id).orElse(null));
     }
 
-    public void saveTransaction(Transaction transaction){
-        transactionRepository.save(transaction);
+    public void saveTransaction(TransactionDto transaction){
+
+        transactionRepository.save(TransactionMapper.dtoToTransactionMap(transaction));
     }
 
     public void deleteTransaction(Long id){

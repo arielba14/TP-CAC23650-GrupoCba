@@ -20,11 +20,20 @@ public class UserService{
     }
 
     public UserDto getUserById(Long id){
-        return UserMapper.userToDtoMap(userRepository.findById(id).orElse(null));
+        User user = userRepository.findById(id).orElse(null);
+        if (user!=null){
+            user.setPassword("*********");
+            return UserMapper.userToDtoMap(user);
+        }else{
+            return null;
+        }
     }
 
-    public void saveUser(User user){
-        userRepository.save(user);
+    public UserDto createUser(UserDto user){
+        userRepository.save(UserMapper.dtoToUserMap(user));
+        UserDto nuevo = user;
+        nuevo.setPassword("*********");
+        return user;
     }
 
     public void deleteUserById(Long id){

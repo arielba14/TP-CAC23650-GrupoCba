@@ -12,6 +12,7 @@ import java.util.List;
 public class UserMapper {
     public User dtoToUserMap(UserDto dto){
         User user = new User();
+      //  user.setId(dto.getId());
         user.setName(dto.getName());
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
@@ -21,7 +22,7 @@ public class UserMapper {
     public UserDto userToDtoMap(User user){
         UserDto dto = new UserDto();
         List<Long> accounts= new ArrayList<>();
-        dto.setId(user.getId());
+        //dto.setId(user.getId());
         dto.setPassword(user.getPassword());
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());

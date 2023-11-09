@@ -17,6 +17,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;    //id de la cuenta
+    @Column(name="username", unique = true)
     private String username;    //nombre de usuario
     private String password;    //password
     private String name;        //nombre del titular
