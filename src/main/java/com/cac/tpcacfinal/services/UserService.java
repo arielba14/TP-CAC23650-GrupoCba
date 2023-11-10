@@ -5,6 +5,7 @@ import com.cac.tpcacfinal.entities.dtos.UserDto;
 import com.cac.tpcacfinal.mappers.UserMapper;
 import com.cac.tpcacfinal.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,32 +13,44 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService{
-    @Autowired
+
     UserRepository userRepository;
 
-    public List<UserDto> getUsers(){
-        return userRepository.findAll().stream().map(user -> UserMapper.userToDtoMap(user)).collect(Collectors.toList());
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public UserDto getUserById(Long id){
-        User user = userRepository.findById(id).orElse(null);
-        if (user!=null){
-            user.setPassword("*********");
-            return UserMapper.userToDtoMap(user);
-        }else{
-            return null;
-        }
+    public List<User> getUsers(){
+        return userRepository.findAll();
     }
 
-    public UserDto createUser(UserDto user){
-        userRepository.save(UserMapper.dtoToUserMap(user));
-        UserDto nuevo = user;
-        nuevo.setPassword("*********");
+    public User getUserById(Long id){
+        User user = userRepository.findById(id).get();
+        user.setPassword("*********");
         return user;
     }
 
-    public void deleteUserById(Long id){
-        userRepository.deleteById(id);
+    public UserDto createUser(UserDto userDto){
+        User user =UserMapper.dtoToUserMap(userDto);
+        User nuevo = userRepository.save(user);
+        userDto = UserMapper.userToDtoMap(nuevo);
+        userDto.setPassword("*********");
+        return userDto;
+    }
+
+    public UserDto updateUser(Long id, UserDto userDto){
+        User user = userRepository.findById(id).get();
+        //hacer
+        return userDto;
+    }
+
+    public String deleteUserById(Long id){
+        if (userRepository.existsById(id)){
+            userRepository.deleteById(id);
+            return "El usuario con id " + id + " ha sido eliminado";
+        }else{
+            return "El usuario con id " + id + " no existe, por lo tanto no se puede eliminar";
+        }
     }
 
 }
