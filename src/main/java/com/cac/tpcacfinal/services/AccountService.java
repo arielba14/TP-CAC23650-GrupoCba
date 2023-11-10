@@ -16,26 +16,45 @@ import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
-    @Autowired
-    AccountRepository accountRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    UserService userService;
 
-    public List<AccountDto> getAccounts(){
-        return accountRepository.findAll().stream().map(account -> AccountMapper.accountToDtoMap(account)).collect(Collectors.toList());
+    private AccountRepository accountRepository;
+
+    public AccountService(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
     }
 
-    public AccountDto getAccountById(Long id){
-        return AccountMapper.accountToDtoMap(accountRepository.findById(id).orElse(null));
+    public List<Account> getAccounts(){
+        return accountRepository.findAll();
     }
 
-    public void createAccount(AccountDto account){
-        accountRepository.save(AccountMapper.dtoToAccountMap(account));
+    public Account getAccountById(Long id){
+        return accountRepository.findById(id).get();
     }
 
-    public void deleteAccount(Long id){
-        accountRepository.deleteById(id);
+    public AccountDto createAccount(AccountDto dto){
+        Account account = AccountMapper.dtoToAccountMap(dto);
+        Account nueva = accountRepository.save(account);
+        dto = AccountMapper.accountToDtoMap(nueva);
+        return dto;
+    }
+
+    public AccountDto updateAccount(AccountDto dto){
+        //hacer
+        return dto;
+    }
+
+    public String deleteAccount(Long id){
+        if (accountRepository.existsById(id)){
+            Account account = accountRepository.findById(id).get();
+            if (account.getActive()) {
+                account.setActive(false);
+                accountRepository.save(account);
+                return "La cuenta con id " + id + " está inactiva";
+            }else{
+                return "La cuenta con id " + id + " ya se encuentra inactiva";
+            }
+        }else{
+            return "La cuenta con id " + id + " no existe";
+        }
     }
 }

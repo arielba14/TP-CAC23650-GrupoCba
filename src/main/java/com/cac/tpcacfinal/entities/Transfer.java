@@ -1,6 +1,5 @@
 package com.cac.tpcacfinal.entities;
 
-import com.cac.tpcacfinal.utils.TransactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,15 +14,15 @@ import java.util.Date;
 @Table (name = "transacciones")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Transaction {
+public class Transfer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;    //identificación de la transacción
-    @Enumerated(EnumType.STRING)
-    private TransactionType type;   //tipo, por el momento si es un débito o un crédito
     private Date date;  //fecha
     private Double amount;  //importe de la transacción
     private String description; //descricpción
-    @ManyToOne  //una transacción tiene una sola cuenta, una cuenta tiene varias transacciones
-    private Account account;
+    @ManyToOne  //una transferencia tiene una sola cuenta origen, una cuenta tiene varias transacciones
+    private Account originAccount;
+    @ManyToOne  //una transacción tiene una sola cuenta destino, una cuenta tiene varias transacciones
+    private Account destinedAccount;
 }

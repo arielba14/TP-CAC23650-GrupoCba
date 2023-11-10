@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserService{
 
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -40,13 +40,12 @@ public class UserService{
 
     public UserDto updateUser(Long id, UserDto userDto){
         User user = userRepository.findById(id).get();
-        //hacer
+       //hacer
         return userDto;
     }
 
     public String deleteUserById(Long id){
         if (userRepository.existsById(id)){
-            userRepository.deleteById(id);
             return "El usuario con id " + id + " ha sido eliminado";
         }else{
             return "El usuario con id " + id + " no existe, por lo tanto no se puede eliminar";

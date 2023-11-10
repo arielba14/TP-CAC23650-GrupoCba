@@ -1,7 +1,8 @@
 package com.cac.tpcacfinal.entities.dtos;
 
 
-import com.cac.tpcacfinal.utils.TransactionType;
+import com.cac.tpcacfinal.entities.Account;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +14,11 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransactionDto {
+public class TransferDto {
     private Long id;
-    private TransactionType type;
     private Date date;
     private Double amount;
     private String description;
-    private AccountDto account;
+    private AccountDto originAccount;
+    private AccountDto destinedAccount;
 }

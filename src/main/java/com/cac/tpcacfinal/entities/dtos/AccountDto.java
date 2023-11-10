@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -20,6 +21,7 @@ public class AccountDto {
     private String alias;
     private AccountType type;
     private Double amount;
+    private Boolean active;
     private UserDto user;
-    private List<Long> transactions;
+    private List<Long> transfers;
 }
