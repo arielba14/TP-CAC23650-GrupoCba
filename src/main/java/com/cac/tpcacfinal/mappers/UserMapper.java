@@ -8,6 +8,7 @@ import lombok.experimental.UtilityClass;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class UserMapper {
@@ -37,13 +38,7 @@ public class UserMapper {
         dto.setBirthday(user.getBirthday());
         dto.setCrated_at(user.getCrated_at());
         dto.setUpdate_at(user.getUpdate_at());
-        List<Long> accounts= new ArrayList<>();
-        if (user.getAccounts() != null){
-            for (Account a: user.getAccounts()){
-                accounts.add(a.getId());
-            }
-            dto.setIdAccounts(accounts);
-        }
+        dto.setIdAccounts(user.getAccounts().stream().map(account -> account.getId()).collect(Collectors.toList()));
         return dto;
     }
 

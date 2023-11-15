@@ -1,6 +1,7 @@
 package com.cac.tpcacfinal.entities.dtos;
 
 
+import com.cac.tpcacfinal.entities.Account;
 import com.cac.tpcacfinal.utils.AccountType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,5 +24,5 @@ public class AccountDto {
     private Double amount;
     private Boolean active;
     private UserDto user;
-    private List<Long> transfers;
+
 }

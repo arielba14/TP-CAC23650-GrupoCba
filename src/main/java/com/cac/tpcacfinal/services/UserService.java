@@ -20,14 +20,16 @@ public class UserService{
         this.userRepository = userRepository;
     }
 
-    public List<User> getUsers(){
-        return userRepository.findAll();
+    public List<UserDto> getUsers(){
+        List<UserDto> lista =  userRepository.findAll().stream().map(user -> UserMapper.userToDtoMap(user)).collect(Collectors.toList());
+        lista.forEach(user -> user.setPassword("*********"));
+        return lista;
     }
 
-    public User getUserById(Long id){
-        User user = userRepository.findById(id).get();
-        user.setPassword("*********");
-        return user;
+    public UserDto getUserById(Long id){
+        UserDto dto = UserMapper.userToDtoMap(userRepository.findById(id).get());
+        dto.setPassword("*********");
+        return dto;
     }
 
     public UserDto createUser(UserDto userDto){

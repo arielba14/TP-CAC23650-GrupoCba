@@ -9,9 +9,13 @@ import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+//@AllArgsConstructor
+//@NoArgsConstructor
 public class UserDto {
+
+    public UserDto() {
+    }
+
     private Long id;
     private String username;
     private String password;
@@ -23,4 +27,5 @@ public class UserDto {
     private LocalDateTime crated_at;
     private LocalDateTime update_at;
     private List<Long> idAccounts;
+
 }

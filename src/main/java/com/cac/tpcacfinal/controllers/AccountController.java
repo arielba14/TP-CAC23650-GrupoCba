@@ -22,13 +22,13 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Account>> getAccounts(){
+    public ResponseEntity<List<AccountDto>> getAccounts(){
 
         return ResponseEntity.status(HttpStatus.OK).body(accountService.getAccounts());
     }
 
     @GetMapping(value="/{id}")
-    public ResponseEntity<Account> getAccountById(@PathVariable Long id){
+    public ResponseEntity<AccountDto> getAccountById(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(accountService.getAccountById(id));
     }
 

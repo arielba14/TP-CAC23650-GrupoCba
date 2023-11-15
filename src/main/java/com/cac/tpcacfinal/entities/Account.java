@@ -28,7 +28,5 @@ public class Account {
     @ManyToOne  //una cuenta es de un solo usuario
     @JoinColumn(name="user_id", referencedColumnName = "id")
     private User user;  //el titular de la cuenta
-   // @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
-    //private List<Transfer> transfers;
 
 }

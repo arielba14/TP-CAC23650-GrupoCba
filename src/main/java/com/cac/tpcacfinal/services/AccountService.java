@@ -19,20 +19,21 @@ public class AccountService {
 
     private AccountRepository accountRepository;
 
-    public AccountService(AccountRepository accountRepository) {
+    private AccountService(AccountRepository accountRepository, UserRepository userRepository) {
         this.accountRepository = accountRepository;
     }
 
-    public List<Account> getAccounts(){
-        return accountRepository.findAll();
+    public List<AccountDto> getAccounts(){
+        return accountRepository.findAll().stream().map(account -> AccountMapper.accountToDtoMap(account)).collect(Collectors.toList());
     }
 
-    public Account getAccountById(Long id){
-        return accountRepository.findById(id).get();
+    public AccountDto getAccountById(Long id){
+        return AccountMapper.accountToDtoMap(accountRepository.findById(id).get());
     }
 
     public AccountDto createAccount(AccountDto dto){
         Account account = AccountMapper.dtoToAccountMap(dto);
+        account.setActive(true);
         Account nueva = accountRepository.save(account);
         dto = AccountMapper.accountToDtoMap(nueva);
         return dto;
