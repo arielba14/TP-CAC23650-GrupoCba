@@ -19,7 +19,7 @@ public class Transfer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;    //identificación de la transacción
     private Date date;  //fecha
-    private Double amount;  //importe de la transacción
+    private Double amount;  //importe de la transferencia
     private String description; //descricpción
     @ManyToOne  //una transferencia tiene una sola cuenta origen, una cuenta tiene varias transacciones
     private Account originAccount;

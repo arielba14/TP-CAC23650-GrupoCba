@@ -1,16 +1,11 @@
 package com.cac.tpcacfinal.services;
 
 import com.cac.tpcacfinal.entities.Account;
-import com.cac.tpcacfinal.entities.User;
 import com.cac.tpcacfinal.entities.dtos.AccountDto;
-import com.cac.tpcacfinal.entities.dtos.UserDto;
 import com.cac.tpcacfinal.mappers.AccountMapper;
-import com.cac.tpcacfinal.mappers.UserMapper;
 import com.cac.tpcacfinal.repositories.AccountRepository;
 import com.cac.tpcacfinal.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,9 +13,11 @@ import java.util.stream.Collectors;
 public class AccountService {
 
     private AccountRepository accountRepository;
+    private UserRepository userRepository;
 
     private AccountService(AccountRepository accountRepository, UserRepository userRepository) {
         this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
     }
 
     public List<AccountDto> getAccounts(){
@@ -34,6 +31,7 @@ public class AccountService {
     public AccountDto createAccount(AccountDto dto){
         Account account = AccountMapper.dtoToAccountMap(dto);
         account.setActive(true);
+        account.setUser(userRepository.findById(dto.getUser().getId()).get());
         Account nueva = accountRepository.save(account);
         dto = AccountMapper.accountToDtoMap(nueva);
         return dto;

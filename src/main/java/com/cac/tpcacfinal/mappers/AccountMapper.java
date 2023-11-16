@@ -3,6 +3,7 @@ package com.cac.tpcacfinal.mappers;
 import com.cac.tpcacfinal.entities.Account;
 import com.cac.tpcacfinal.entities.dtos.AccountDto;
 import com.cac.tpcacfinal.entities.Transfer;
+import com.cac.tpcacfinal.services.UserService;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class AccountMapper {
         if (account.getUser() != null){
             dto.setUser(UserMapper.userToDtoMap(account.getUser()));
         }
+
         return dto;
     }
 }

@@ -38,7 +38,9 @@ public class UserMapper {
         dto.setBirthday(user.getBirthday());
         dto.setCrated_at(user.getCrated_at());
         dto.setUpdate_at(user.getUpdate_at());
-        dto.setIdAccounts(user.getAccounts().stream().map(account -> account.getId()).collect(Collectors.toList()));
+        if (user.getAccounts()!=null) {
+            dto.setIdAccounts(user.getAccounts().stream().map(account -> account.getId()).collect(Collectors.toList()));
+        }
         return dto;
     }
 

@@ -29,4 +29,10 @@ public class Account {
     @JoinColumn(name="user_id", referencedColumnName = "id")
     private User user;  //el titular de la cuenta
 
+    //ver....
+   /* @OneToMany(mappedBy = "transferOr", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transfer> origen; //cuentas que tiene el usuario
+    @OneToMany(mappedBy = "transferDes", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transfer> destino; //cuentas que tiene el usuario*/
+
 }
