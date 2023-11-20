@@ -2,6 +2,7 @@ package com.cac.tpcacfinal.services;
 
 import com.cac.tpcacfinal.entities.User;
 import com.cac.tpcacfinal.entities.dtos.UserDto;
+import com.cac.tpcacfinal.exceptions.UserExceptions;
 import com.cac.tpcacfinal.mappers.UserMapper;
 import com.cac.tpcacfinal.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,18 +29,28 @@ public class UserService{
     }
 
     public UserDto getUserById(Long id){
-        UserDto dto = UserMapper.userToDtoMap(userRepository.findById(id).get());
-        dto.setPassword("*********");
-        return dto;
+        if (userRepository.existsById(id)){
+            UserDto dto = UserMapper.userToDtoMap(userRepository.findById(id).get());
+            dto.setPassword("*********");
+            return dto;
+        }else{
+            throw new UserExceptions("No existe el usuario con el id " + id);
+        }
     }
 
     public UserDto getUserByUsername(String username, String password){
-        List<User> lista = userRepository.findAll().stream().filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password)).toList();
+       /* List<User> lista = userRepository.findAll().stream().filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password)).toList();
         if (lista.size()==1){
             lista.get(0).setPassword("*********");
             return UserMapper.userToDtoMap(lista.get(0));
         }else{
             return null;
+        }*/
+        User user = userRepository.findByUsernamePassword(username, password);
+        if (user!=null){
+            return UserMapper.userToDtoMap(user);
+        }else{
+            throw new UserExceptions("No existe el usuario con el username = " + username + " y el password " + password);
         }
     }
 
@@ -107,6 +118,10 @@ public class UserService{
         }else{
             return "El usuario con id " + id + " no existe, por lo tanto no se puede eliminar";
         }
+    }
+
+    public boolean existsByUsername(String username){
+        return userRepository.existsByUsername(username);
     }
 
 }
