@@ -14,11 +14,11 @@ import java.util.List;
 @Setter
 @Table (name = "cuentas")
 @NoArgsConstructor
-@AllArgsConstructor
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;    //identificación de la cuenta
+    @Column(name="cbu", unique = true)
     private Long number;    //CBU
     private String alias;   //alias
     @Enumerated(EnumType.STRING)

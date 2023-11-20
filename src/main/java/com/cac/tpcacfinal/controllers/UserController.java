@@ -31,6 +31,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(service.getUserById(id));
     }
 
+    @GetMapping(value = "/username")
+    public ResponseEntity<UserDto> getUserByUsername(@RequestBody UserDto user){
+        return ResponseEntity.status(HttpStatus.OK).body(service.getUserByUsername(user.getUsername(), user.getPassword()));
+    }
+
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto user){
 
@@ -38,6 +43,11 @@ public class UserController {
     }
 
     @PutMapping(value = "{id}")
+    public ResponseEntity<UserDto> updateUserFull(@PathVariable Long id, @RequestBody UserDto user){
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateUserFull(id, user));
+    }
+
+    @PatchMapping(value = "{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto user){
         return ResponseEntity.status(HttpStatus.OK).body(service.updateUser(id, user));
     }

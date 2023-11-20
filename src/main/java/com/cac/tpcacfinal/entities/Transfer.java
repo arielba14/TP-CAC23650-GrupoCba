@@ -13,7 +13,6 @@ import java.util.Date;
 @Setter
 @Table (name = "transacciones")
 @NoArgsConstructor
-@AllArgsConstructor
 public class Transfer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
