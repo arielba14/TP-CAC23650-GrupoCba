@@ -39,27 +39,31 @@ public class UserService{
     }
 
     public UserDto getUserByUsername(String username, String password){
-       /* List<User> lista = userRepository.findAll().stream().filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password)).toList();
+        List<User> lista = userRepository.findAll().stream().filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password)).toList();
         if (lista.size()==1){
             lista.get(0).setPassword("*********");
             return UserMapper.userToDtoMap(lista.get(0));
         }else{
             return null;
-        }*/
-        User user = userRepository.findByUsernamePassword(username, password);
+        }
+        /*User user = userRepository.findByUsernamePassword(username);
         if (user!=null){
             return UserMapper.userToDtoMap(user);
         }else{
             throw new UserExceptions("No existe el usuario con el username = " + username + " y el password " + password);
-        }
+        }*/
     }
 
     public UserDto createUser(UserDto userDto){
-        User user =UserMapper.dtoToUserMap(userDto);
-        User nuevo = userRepository.save(user);
-        userDto = UserMapper.userToDtoMap(nuevo);
-        userDto.setPassword("*********");
-        return userDto;
+        if (!existsByUsername(userDto.getUsername())){
+            User user =UserMapper.dtoToUserMap(userDto);
+            User nuevo = userRepository.save(user);
+            userDto = UserMapper.userToDtoMap(nuevo);
+            userDto.setPassword("*********");
+            return userDto;
+        }else{
+            throw new UserExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", no se puede crear el usuario");
+        }
     }
 
     public UserDto updateUserFull(Long id, UserDto userDto){
@@ -83,6 +87,7 @@ public class UserService{
     public UserDto updateUser(Long id, UserDto userDto){
         if (userRepository.existsById(id)){
             User user = userRepository.findById(id).get();
+
             if (userDto.getAddress()!= null){
                 user.setAddress(userDto.getAddress());
             }
@@ -120,8 +125,21 @@ public class UserService{
         }
     }
 
+    public UserDto validarByUsernameAndPassword(String username, String password){
+        User user = userRepository.findByUsername(username);
+        if (user != null){
+            if (user.getPassword().equals(password)){
+                return UserMapper.userToDtoMap(user);
+            }else{
+                return null;
+            }
+        }else{
+            return null;
+        }
+    }
     public boolean existsByUsername(String username){
-        return userRepository.existsByUsername(username);
+        User user = userRepository.findByUsername(username);
+        return user != null;
     }
 
 }
