@@ -25,6 +25,7 @@ public class User {
     private String address;
     private String dni;
     private String birthday;
+    private Boolean activo;
     private String mail;
     private LocalDateTime crated_at;
     private LocalDateTime update_at;

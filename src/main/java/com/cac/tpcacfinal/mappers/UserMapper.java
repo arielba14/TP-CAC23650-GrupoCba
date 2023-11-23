@@ -20,6 +20,7 @@ public class UserMapper {
         user.setMail(dto.getMail());
         user.setDni(dto.getDni());
         user.setBirthday(dto.getBirthday());
+        user.setActivo(dto.getActivo());
         user.setAddress(dto.getAddress());
         user.setCrated_at(dto.getCrated_at());
         user.setUpdate_at(dto.getUpdate_at());
@@ -36,6 +37,7 @@ public class UserMapper {
         dto.setMail(user.getMail());
         dto.setDni(user.getDni());
         dto.setBirthday(user.getBirthday());
+        dto.setActivo(user.getActivo());
         dto.setCrated_at(user.getCrated_at());
         dto.setUpdate_at(user.getUpdate_at());
         if (user.getAccounts()!=null) {

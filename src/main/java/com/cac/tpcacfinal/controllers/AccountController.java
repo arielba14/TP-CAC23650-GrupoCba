@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -16,7 +17,7 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    public AccountController(AccountService service){
+    private AccountController(AccountService service){
 
         this.accountService = service;
     }
@@ -43,10 +44,14 @@ public class AccountController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<String> deleteAccount(@PathVariable Long id){
+    public ResponseEntity<Boolean> deleteAccount(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(accountService.deleteAccount(id));
     }
 
+    @PatchMapping(value = "/ingreso/{id}")
+    public ResponseEntity<Boolean> ingresarDinero(@PathVariable Long id, @RequestBody BigDecimal importe){
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.ingresarDinero(id, importe));
+    }
 
 
 

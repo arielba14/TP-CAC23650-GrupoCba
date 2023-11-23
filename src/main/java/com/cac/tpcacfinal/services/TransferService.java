@@ -30,6 +30,10 @@ public class TransferService {
 
     public TransferDto createTransfer(TransferDto transfer){
         Transfer nueva = TransferMapper.dtoToTransferMap(transfer);
+        //preguntar que existann las dos cuentaas
+        //preguntar si el importe a transferir es mator que el saldo de la cuenta origen
+        //que el tipo de las cuentas sean de la misma moneda
+        //que no sean las mismas cuentas origen y destino
         transferRepository.save(nueva);
         return TransferMapper.transferToDtoMap(nueva);
     }

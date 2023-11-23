@@ -22,6 +22,7 @@ public class Account {
     private Long id;    //identificación de la cuenta
     @Column(name="cbu", unique = true)
     private Long number;    //CBU
+    @Column(name="alias", unique = true)
     private String alias;   //alias
     @Enumerated(EnumType.STRING)
     private AccountType type;

@@ -15,7 +15,7 @@ public class TransferController {
 
     private final TransferService service;
 
-    public TransferController(TransferService transactionService){
+    private TransferController(TransferService transactionService){
         this.service = transactionService;
     }
 

@@ -5,6 +5,7 @@ import com.cac.tpcacfinal.entities.dtos.AccountDto;
 import com.cac.tpcacfinal.mappers.AccountMapper;
 import com.cac.tpcacfinal.repositories.AccountRepository;
 import com.cac.tpcacfinal.repositories.UserRepository;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -36,6 +37,19 @@ public class AccountService {
 
     }
 
+
+    public Boolean ingresarDinero(Long id, BigDecimal importe){
+        if (accountRepository.existsById(id)){
+            Account account = accountRepository.findById(id).get();
+            account.setAmount(account.getAmount().add(importe));
+            accountRepository.save(account);
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
     public AccountDto createAccount(AccountDto dto){
         Account account = AccountMapper.dtoToAccountMap(dto);
         account.setActive(true);
@@ -53,18 +67,18 @@ public class AccountService {
         return dto;
     }
 
-    public String deleteAccount(Long id){
+    public Boolean deleteAccount(Long id){
         if (accountRepository.existsById(id)){
             Account account = accountRepository.findById(id).get();
             if (account.getActive()) {
                 account.setActive(false);
                 accountRepository.save(account);
-                return "La cuenta con id " + id + " está inactiva";
+                return true;
             }else{
-                return "La cuenta con id " + id + " ya se encuentra inactiva";
+                return false;
             }
         }else{
-            return "La cuenta con id " + id + " no existe";
+            return false;
         }
     }
 }

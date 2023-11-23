@@ -19,6 +19,8 @@ public class AccountMapper {
         account.setNumber(dto.getNumber());
         account.setActive(dto.getActive());
         account.setAmount(dto.getAmount());
+        account.setUpdate_at(dto.getUpdate_at());
+        account.setCreated_at(dto.getCreated_at());
         if (dto.getUser() != null){
             account.setUser(UserMapper.dtoToUserMap(dto.getUser()));
         }
@@ -33,6 +35,8 @@ public class AccountMapper {
         dto.setAlias(account.getAlias());
         dto.setAmount(account.getAmount());
         dto.setActive(account.getActive());
+        dto.setCreated_at(account.getCreated_at());
+        dto.setUpdate_at(account.getUpdate_at());
         if (account.getUser() != null){
             dto.setUser(UserMapper.userToDtoMap(account.getUser()));
         }

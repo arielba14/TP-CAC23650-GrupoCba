@@ -4,6 +4,7 @@ import com.cac.tpcacfinal.entities.User;
 import com.cac.tpcacfinal.entities.dtos.UserDto;
 import com.cac.tpcacfinal.exceptions.BankingExceptions;
 import com.cac.tpcacfinal.mappers.UserMapper;
+import com.cac.tpcacfinal.repositories.AccountRepository;
 import com.cac.tpcacfinal.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,11 @@ public class UserService{
 
     private final UserRepository userRepository;
 
+
     private UserService(UserRepository userRepository) {
+
         this.userRepository = userRepository;
+
     }
 
     public List<UserDto> getUsers(){
@@ -50,6 +54,7 @@ public class UserService{
             User user =UserMapper.dtoToUserMap(userDto);
             user.setCrated_at(LocalDateTime.now());
             user.setUpdate_at(LocalDateTime.now());
+            user.setActivo(true);
             User nuevo = userRepository.save(user);
             userDto = UserMapper.userToDtoMap(nuevo);
             userDto.setPassword("*********");
@@ -124,9 +129,16 @@ public class UserService{
     }
 
     public boolean deleteUserById(Long id){
+
         if (userRepository.existsById(id)){
-            userRepository.deleteById(id);
-            return true;
+            User del = userRepository.findById(id).get();
+            if (del.getAccounts().stream().filter(cuentas -> cuentas.getActive()).toList().size()>0){
+                return false;
+            }else{
+                del.setActivo(false);
+                userRepository.save(del);
+                return true;
+            }
         }else{
             return false;
         }
