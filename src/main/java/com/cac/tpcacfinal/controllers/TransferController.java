@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/api/transfers")
 public class TransferController {
 
-    private TransferService service;
+    private final TransferService service;
 
     public TransferController(TransferService transactionService){
         this.service = transactionService;

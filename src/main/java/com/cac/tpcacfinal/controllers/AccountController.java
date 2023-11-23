@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/accounts")
 public class AccountController {
 
-    private AccountService accountService;
+    private final AccountService accountService;
 
     public AccountController(AccountService service){
 

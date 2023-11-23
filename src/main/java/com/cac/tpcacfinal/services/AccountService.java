@@ -6,14 +6,17 @@ import com.cac.tpcacfinal.mappers.AccountMapper;
 import com.cac.tpcacfinal.repositories.AccountRepository;
 import com.cac.tpcacfinal.repositories.UserRepository;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
 
-    private AccountRepository accountRepository;
-    private UserRepository userRepository;
+    private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
     private AccountService(AccountRepository accountRepository, UserRepository userRepository) {
         this.accountRepository = accountRepository;
@@ -25,12 +28,20 @@ public class AccountService {
     }
 
     public AccountDto getAccountById(Long id){
-        return AccountMapper.accountToDtoMap(accountRepository.findById(id).get());
+        if (accountRepository.existsById(id)){
+            return AccountMapper.accountToDtoMap(accountRepository.findById(id).get());
+        }else{
+            return null;
+        }
+
     }
 
     public AccountDto createAccount(AccountDto dto){
         Account account = AccountMapper.dtoToAccountMap(dto);
         account.setActive(true);
+        account.setAmount(BigDecimal.ZERO);
+        account.setCreated_at(LocalDateTime.now());
+        account.setUpdate_at(LocalDateTime.now());
         account.setUser(userRepository.findById(dto.getUser().getId()).get());
         Account nueva = accountRepository.save(account);
         dto = AccountMapper.accountToDtoMap(nueva);

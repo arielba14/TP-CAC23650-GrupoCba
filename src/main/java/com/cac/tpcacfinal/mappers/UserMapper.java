@@ -21,8 +21,8 @@ public class UserMapper {
         user.setDni(dto.getDni());
         user.setBirthday(dto.getBirthday());
         user.setAddress(dto.getAddress());
-        user.setCrated_at(LocalDateTime.now());
-        user.setUpdate_at(LocalDateTime.now());
+        user.setCrated_at(dto.getCrated_at());
+        user.setUpdate_at(dto.getUpdate_at());
         return user;
     }
 

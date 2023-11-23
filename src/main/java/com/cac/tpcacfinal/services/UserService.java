@@ -2,11 +2,9 @@ package com.cac.tpcacfinal.services;
 
 import com.cac.tpcacfinal.entities.User;
 import com.cac.tpcacfinal.entities.dtos.UserDto;
-import com.cac.tpcacfinal.exceptions.UserExceptions;
+import com.cac.tpcacfinal.exceptions.BankingExceptions;
 import com.cac.tpcacfinal.mappers.UserMapper;
 import com.cac.tpcacfinal.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,9 +14,9 @@ import java.util.stream.Collectors;
 @Service
 public class UserService{
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    private UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -34,42 +32,43 @@ public class UserService{
             dto.setPassword("*********");
             return dto;
         }else{
-            throw new UserExceptions("No existe el usuario con el id " + id);
+            return null;
         }
     }
 
     public UserDto getUserByUsername(String username, String password){
-        List<User> lista = userRepository.findAll().stream().filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password)).toList();
-        if (lista.size()==1){
-            lista.get(0).setPassword("*********");
-            return UserMapper.userToDtoMap(lista.get(0));
+        UserDto user = findByUsernameAndPassword(username, password);
+        if (user!=null){
+            return user;
         }else{
             return null;
         }
-        /*User user = userRepository.findByUsernamePassword(username);
-        if (user!=null){
-            return UserMapper.userToDtoMap(user);
-        }else{
-            throw new UserExceptions("No existe el usuario con el username = " + username + " y el password " + password);
-        }*/
     }
 
     public UserDto createUser(UserDto userDto){
         if (!existsByUsername(userDto.getUsername())){
             User user =UserMapper.dtoToUserMap(userDto);
+            user.setCrated_at(LocalDateTime.now());
+            user.setUpdate_at(LocalDateTime.now());
             User nuevo = userRepository.save(user);
             userDto = UserMapper.userToDtoMap(nuevo);
             userDto.setPassword("*********");
             return userDto;
         }else{
-            throw new UserExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", no se puede crear el usuario");
+            throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", no se puede crear el usuario");
         }
     }
 
     public UserDto updateUserFull(Long id, UserDto userDto){
         if (userRepository.existsById(id)){
+
             User user = userRepository.findById(id).get();
-            user.setUsername(userDto.getUsername());
+            User userName = userRepository.findByUsername(userDto.getUsername());
+            if (user.getId()!=userName.getId()){
+                throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+            }else{
+                user.setUsername(userDto.getUsername());
+            }
             user.setName(userDto.getName());
             user.setDni(userDto.getDni());
             user.setAddress(userDto.getAddress());
@@ -80,14 +79,21 @@ public class UserService{
             userRepository.save(user);
             return UserMapper.userToDtoMap(user);
         }else{
-            return null;
+            throw new BankingExceptions("No existe el usuario con el id " + id + " no se puede actualizar el usuario");
         }
     }
 
     public UserDto updateUser(Long id, UserDto userDto){
         if (userRepository.existsById(id)){
             User user = userRepository.findById(id).get();
-
+            if (userDto.getUsername()!=null){
+                User userName = userRepository.findByUsername(userDto.getUsername());
+                if (user.getId()!=userName.getId()){
+                    throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+                }else{
+                    user.setUsername(userDto.getUsername());
+                }
+            }
             if (userDto.getAddress()!= null){
                 user.setAddress(userDto.getAddress());
             }
@@ -113,19 +119,20 @@ public class UserService{
             userRepository.save(user);
             return UserMapper.userToDtoMap(user);
         }else{
-            return null;
+            throw new BankingExceptions("No existe el usuario con el id " + id + " no se puede actualizar el usuario");
         }
     }
 
-    public String deleteUserById(Long id){
+    public boolean deleteUserById(Long id){
         if (userRepository.existsById(id)){
-            return "El usuario con id " + id + " ha sido eliminado";
+            userRepository.deleteById(id);
+            return true;
         }else{
-            return "El usuario con id " + id + " no existe, por lo tanto no se puede eliminar";
+            return false;
         }
     }
 
-    public UserDto validarByUsernameAndPassword(String username, String password){
+    public UserDto findByUsernameAndPassword(String username, String password){
         User user = userRepository.findByUsername(username);
         if (user != null){
             if (user.getPassword().equals(password)){

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -24,7 +26,9 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private AccountType type;
     private Boolean active;
-    private Double amount;  //saldo de la cuenta
+    private BigDecimal amount;  //saldo de la cuenta
+    private LocalDateTime created_at;
+    private LocalDateTime update_at;
     @ManyToOne  //una cuenta es de un solo usuario
     @JoinColumn(name="user_id", referencedColumnName = "id")
     private User user;  //el titular de la cuenta

@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 @Service
 public class TransferService {
 
-    private TransferRepository transferRepository;
+    private final TransferRepository transferRepository;
 
-    public TransferService(TransferRepository transferRepository) {
+    private TransferService(TransferRepository transferRepository) {
         this.transferRepository = transferRepository;
     }
 

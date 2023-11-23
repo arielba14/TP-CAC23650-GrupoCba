@@ -2,6 +2,7 @@ package com.cac.tpcacfinal.controllers;
 
 import com.cac.tpcacfinal.entities.User;
 import com.cac.tpcacfinal.entities.dtos.UserDto;
+import com.cac.tpcacfinal.exceptions.BankingExceptions;
 import com.cac.tpcacfinal.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private UserService service;
+    private final UserService service;
 
     private UserController(UserService service){
         this.service = service;
@@ -38,23 +39,36 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto user){
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.createUser(user));
+        try{
+            return ResponseEntity.status(HttpStatus.CREATED).body(service.createUser(user));
+        }catch(BankingExceptions e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @PutMapping(value = "{id}")
     public ResponseEntity<UserDto> updateUserFull(@PathVariable Long id, @RequestBody UserDto user){
-        return ResponseEntity.status(HttpStatus.OK).body(service.updateUserFull(id, user));
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(service.updateUserFull(id, user));
+        }catch(BankingExceptions e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @PatchMapping(value = "{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto user){
-        return ResponseEntity.status(HttpStatus.OK).body(service.updateUser(id, user));
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(service.updateUser(id, user));
+        }catch(BankingExceptions e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @DeleteMapping(value = "{id}")
-    public ResponseEntity<String> deleteUserById(@PathVariable Long id){
-
+    public ResponseEntity<Boolean> deleteUserById(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteUserById(id));
     }
 
