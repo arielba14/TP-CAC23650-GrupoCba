@@ -20,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 public class AccountDto {
     private Long id;
-    private Long number;
+    private String cbu;
     private String alias;
     private AccountType type;
     private BigDecimal amount;

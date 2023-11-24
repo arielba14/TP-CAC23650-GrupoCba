@@ -16,7 +16,7 @@ public class AccountMapper {
         account.setId(dto.getId());
         account.setType(dto.getType());
         account.setAlias(dto.getAlias());
-        account.setNumber(dto.getNumber());
+        account.setCbu(dto.getCbu());
         account.setActive(dto.getActive());
         account.setAmount(dto.getAmount());
         account.setUpdate_at(dto.getUpdate_at());
@@ -31,7 +31,7 @@ public class AccountMapper {
         AccountDto dto = new AccountDto();
         dto.setId(account.getId());
         dto.setType(account.getType());
-        dto.setNumber(account.getNumber());
+        dto.setCbu(account.getCbu());
         dto.setAlias(account.getAlias());
         dto.setAmount(account.getAmount());
         dto.setActive(account.getActive());

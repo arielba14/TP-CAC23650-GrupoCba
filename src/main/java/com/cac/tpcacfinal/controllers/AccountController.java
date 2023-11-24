@@ -3,6 +3,8 @@ package com.cac.tpcacfinal.controllers;
 import com.cac.tpcacfinal.entities.Account;
 import com.cac.tpcacfinal.entities.User;
 import com.cac.tpcacfinal.entities.dtos.AccountDto;
+import com.cac.tpcacfinal.entities.dtos.TransferDto;
+import com.cac.tpcacfinal.exceptions.BankingExceptions;
 import com.cac.tpcacfinal.services.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,6 @@ public class AccountController {
     private final AccountService accountService;
 
     private AccountController(AccountService service){
-
         this.accountService = service;
     }
 
@@ -35,12 +36,32 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto account){
-        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(account));
+        try{
+            return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(account));
+        }catch(BankingExceptions e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @PutMapping("/{id}")
+    public ResponseEntity<AccountDto> updateAccountFull(@PathVariable Long id, @RequestBody AccountDto account){
+        try{
+            return ResponseEntity.status(HttpStatus.CREATED).body(accountService.updateAccount(id, account));
+        }catch(BankingExceptions e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @PatchMapping("/{id}")
     public ResponseEntity<AccountDto> updateAccount(@PathVariable Long id, @RequestBody AccountDto account){
-        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.updateAccount(account));
+        try{
+            return ResponseEntity.status(HttpStatus.CREATED).body(accountService.updateAccount(id, account));
+        }catch(BankingExceptions e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @DeleteMapping(value = "/{id}")
@@ -49,8 +70,8 @@ public class AccountController {
     }
 
     @PatchMapping(value = "/ingreso/{id}")
-    public ResponseEntity<Boolean> ingresarDinero(@PathVariable Long id, @RequestBody BigDecimal importe){
-        return ResponseEntity.status(HttpStatus.OK).body(accountService.ingresarDinero(id, importe));
+    public ResponseEntity<Boolean> ingresarDinero(@PathVariable Long id, @RequestBody TransferDto amount){
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.ingresarDinero(id, amount));
     }
 
 

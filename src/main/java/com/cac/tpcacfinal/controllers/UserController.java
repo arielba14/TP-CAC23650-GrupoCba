@@ -28,7 +28,6 @@ public class UserController {
 
     @GetMapping(value = "{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id){
-
         return ResponseEntity.status(HttpStatus.OK).body(service.getUserById(id));
     }
 
@@ -43,8 +42,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CREATED).body(service.createUser(user));
         }catch(BankingExceptions e){
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @PutMapping(value = "{id}")
@@ -53,8 +52,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(service.updateUserFull(id, user));
         }catch(BankingExceptions e){
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @PatchMapping(value = "{id}")
@@ -63,8 +62,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(service.updateUser(id, user));
         }catch(BankingExceptions e){
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @DeleteMapping(value = "{id}")

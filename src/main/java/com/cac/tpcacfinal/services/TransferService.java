@@ -20,12 +20,15 @@ public class TransferService {
     }
 
     public List<Transfer> getTransfers(){
-
         return transferRepository.findAll();
     }
 
     public Transfer getTransferById(Long id){
-        return transferRepository.findById(id).get();
+        if(transferRepository.existsById(id)){
+            return transferRepository.findById(id).get();
+        }else{
+            return null;
+        }
     }
 
     public TransferDto createTransfer(TransferDto transfer){

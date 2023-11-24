@@ -21,7 +21,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;    //identificación de la cuenta
     @Column(name="cbu", unique = true)
-    private Long number;    //CBU
+    private String cbu;    //CBU
     @Column(name="alias", unique = true)
     private String alias;   //alias
     @Enumerated(EnumType.STRING)

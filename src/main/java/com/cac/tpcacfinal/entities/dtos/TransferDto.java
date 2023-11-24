@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
@@ -17,7 +18,7 @@ import java.util.Date;
 public class TransferDto {
     private Long id;
     private Date date;
-    private Double amount;
+    private BigDecimal amount;
     private String description;
     private AccountDto originAccount;
     private AccountDto destinedAccount;

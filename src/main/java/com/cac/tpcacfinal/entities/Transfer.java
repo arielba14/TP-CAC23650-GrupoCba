@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -18,7 +19,7 @@ public class Transfer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;    //identificación de la transacción
     private Date date;  //fecha
-    private Double amount;  //importe de la transferencia
+    private BigDecimal amount;  //importe de la transferencia
     private String description; //descricpción
     @ManyToOne  //una transferencia tiene una sola cuenta origen, una cuenta tiene varias transacciones
     private Account originAccount;
