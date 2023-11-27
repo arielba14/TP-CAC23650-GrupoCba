@@ -74,16 +74,24 @@ public class AccountService {
             Account account = accountRepository.findById(id).get();
             if (dto.getAlias()!= ""){
                 AccountDto alias = findByAlias(dto.getAlias());
-                if (dto.getId()!=alias.getId()){
-                    throw new BankingExceptions("Ya existe una cuenta con el el ALIAS: " + dto.getAlias() + ", imposible crear la cuenta");
+                if (alias != null){
+                    if (dto.getId()!=alias.getId()){
+                        throw new BankingExceptions("Ya existe una cuenta con el el ALIAS: " + dto.getAlias() + ", imposible crear la cuenta");
+                    }else{
+                        account.setAlias(dto.getAlias());
+                    }
                 }else{
                     account.setAlias(dto.getAlias());
                 }
             }
             if (dto.getCbu()!= ""){
                 AccountDto cbu = findByCbu(dto.getCbu());
-                if (dto.getId()!= cbu.getId()) {
-                    throw new BankingExceptions("Ya existe una cuenta con el CBU: " + dto.getCbu() + ", imposiblre actualizar la cuenta");
+                if (cbu != null){
+                    if (dto.getId()!= cbu.getId()) {
+                        throw new BankingExceptions("Ya existe una cuenta con el CBU: " + dto.getCbu() + ", imposiblre actualizar la cuenta");
+                    }else{
+                        account.setCbu(dto.getCbu());
+                    }
                 }else{
                     account.setCbu(dto.getCbu());
                 }
@@ -97,17 +105,27 @@ public class AccountService {
         if (accountRepository.existsById(id)){
             Account account = accountRepository.findById(id).get();
             AccountDto alias = findByAlias(dto.getAlias());
-            if (dto.getId()!=alias.getId()){
-                throw new BankingExceptions("Ya existe una cuenta con el el ALIAS: " + dto.getAlias() + ", imposible crear la cuenta");
+            if (alias != null){
+                if (dto.getId()!=alias.getId()){
+                    throw new BankingExceptions("Ya existe una cuenta con el el ALIAS: " + dto.getAlias() + ", imposible crear la cuenta");
+                }else{
+                    account.setAlias(dto.getAlias());
+                }
             }else{
                 account.setAlias(dto.getAlias());
             }
+
             AccountDto cbu = findByCbu(dto.getCbu());
-            if (dto.getId()!= cbu.getId()) {
-                throw new BankingExceptions("Ya existe una cuenta con el CBU: " + dto.getCbu() + ", imposiblre actualizar la cuenta");
+            if (cbu!=null){
+                if (dto.getId()!= cbu.getId()) {
+                    throw new BankingExceptions("Ya existe una cuenta con el CBU: " + dto.getCbu() + ", imposiblre actualizar la cuenta");
+                }else{
+                    account.setCbu(dto.getCbu());
+                }
             }else{
                 account.setCbu(dto.getCbu());
             }
+
             return AccountMapper.accountToDtoMap(account);
         }else {
             throw new BankingExceptions("No existe una cuenta con el id + " + id + ", imposible actualizar la cuenta");
@@ -119,6 +137,8 @@ public class AccountService {
             Account account = accountRepository.findById(id).get();
             if (account.getActive()) {
                 account.setActive(false);
+                account.setCbu("");
+                account.setAlias("");
                 accountRepository.save(account);
                 return true;
             }else{

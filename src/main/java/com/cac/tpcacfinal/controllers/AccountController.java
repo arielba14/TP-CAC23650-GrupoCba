@@ -47,7 +47,7 @@ public class AccountController {
     @PutMapping("/{id}")
     public ResponseEntity<AccountDto> updateAccountFull(@PathVariable Long id, @RequestBody AccountDto account){
         try{
-            return ResponseEntity.status(HttpStatus.CREATED).body(accountService.updateAccount(id, account));
+            return ResponseEntity.status(HttpStatus.CREATED).body(accountService.updateAccountFull(id, account));
         }catch(BankingExceptions e){
             e.printStackTrace();
             return null;

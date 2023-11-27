@@ -29,7 +29,7 @@ public class User {
     private String mail;
     private LocalDateTime crated_at;
     private LocalDateTime update_at;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Account> accounts; //cuentas que tiene el usuario
 
 }

@@ -69,11 +69,16 @@ public class UserService{
 
             User user = userRepository.findById(id).get();
             User userName = userRepository.findByUsername(userDto.getUsername());
-            if (user.getId()!=userName.getId()){
-                throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+            if (userName!= null){
+                if (user.getId()!=userName.getId()){
+                    throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+                }else{
+                    user.setUsername(userDto.getUsername());
+                }
             }else{
                 user.setUsername(userDto.getUsername());
             }
+
             user.setName(userDto.getName());
             user.setDni(userDto.getDni());
             user.setAddress(userDto.getAddress());
@@ -84,7 +89,7 @@ public class UserService{
             userRepository.save(user);
             return UserMapper.userToDtoMap(user);
         }else{
-            throw new BankingExceptions("No existe el usuario con el id " + id + " no se puede actualizar el usuario");
+            throw new BankingExceptions("No existe el usuario con el id " + id + "; no se puede actualizar el usuario");
         }
     }
 
@@ -93,11 +98,16 @@ public class UserService{
             User user = userRepository.findById(id).get();
             if (userDto.getUsername()!=null){
                 User userName = userRepository.findByUsername(userDto.getUsername());
-                if (user.getId()!=userName.getId()){
-                    throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+                if (userName != null){
+                    if (user.getId()!=userName.getId()){
+                        throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+                    }else{
+                        user.setUsername(userDto.getUsername());
+                    }
                 }else{
                     user.setUsername(userDto.getUsername());
                 }
+
             }
             if (userDto.getAddress()!= null){
                 user.setAddress(userDto.getAddress());
@@ -136,6 +146,7 @@ public class UserService{
                 return false;
             }else{
                 del.setActivo(false);
+                del.setUsername("inactivo"+id);
                 userRepository.save(del);
                 return true;
             }
