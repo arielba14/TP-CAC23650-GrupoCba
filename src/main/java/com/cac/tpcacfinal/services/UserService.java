@@ -30,6 +30,12 @@ public class UserService{
         return lista;
     }
 
+    public List<UserDto> getUsersActive(){
+        List<UserDto> lista =  userRepository.findAll().stream().filter(User::getActivo).map(user -> UserMapper.userToDtoMap(user)).collect(Collectors.toList());
+        lista.forEach(user -> user.setPassword("*********"));
+        return lista;
+    }
+
     public UserDto getUserById(Long id){
         if (userRepository.existsById(id)){
             UserDto dto = UserMapper.userToDtoMap(userRepository.findById(id).get());
@@ -54,14 +60,18 @@ public class UserService{
             throw new BankingExceptions("El nombre de usuario, dni y nombre no pueden ser vacios, imposible crear el usuario");
         }else{
             if (!existsByUsername(userDto.getUsername())){
-                User user =UserMapper.dtoToUserMap(userDto);
-                user.setCrated_at(LocalDateTime.now());
-                user.setUpdate_at(LocalDateTime.now());
-                user.setActivo(true);
-                User nuevo = userRepository.save(user);
-                userDto = UserMapper.userToDtoMap(nuevo);
-                userDto.setPassword("*********");
-                return userDto;
+                if (!existsByDni(userDto.getDni())){
+                    User user =UserMapper.dtoToUserMap(userDto);
+                    user.setCrated_at(LocalDateTime.now());
+                    user.setUpdate_at(LocalDateTime.now());
+                    user.setActivo(true);
+                    User nuevo = userRepository.save(user);
+                    userDto = UserMapper.userToDtoMap(nuevo);
+                    userDto.setPassword("*********");
+                    return userDto;
+                }else{
+                    throw new BankingExceptions("Ya existe un usuario con el dni " + userDto.getDni() + ", no se puede crear el usuario");
+                }
             }else{
                 throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", no se puede crear el usuario");
             }
@@ -74,26 +84,35 @@ public class UserService{
                 throw new BankingExceptions("El nombre de usuario, dni y nombre no pueden ser vacios, imposible actualizar el usuario");
             }else {
                 User user = userRepository.findById(id).get();
-                User userName = userRepository.findByUsername(userDto.getUsername());
-                if (userName != null) {
-                    if (user.getId() != userName.getId()) {
-                        throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+                if (user.getActivo()){
+                    User userName = userRepository.findByUsername(userDto.getUsername());
+                    if (userName != null) {
+                        if (user.getId() != userName.getId()) {
+                            throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+                        } else {
+                            user.setUsername(userDto.getUsername());
+                        }
                     } else {
                         user.setUsername(userDto.getUsername());
                     }
-                } else {
-                    user.setUsername(userDto.getUsername());
-                }
+                    User userDni = userRepository.findByDni(userDto.getDni());
+                    if (userDni != null){
+                        if (user.getId()!=userDni.getId()){
+                            throw new BankingExceptions("Ya existe un usuario con el dni " + userDto.getDni() + ", imposible realizar la actualización del username");
+                        }
+                    }
 
-                user.setName(userDto.getName());
-                user.setDni(userDto.getDni());
-                user.setAddress(userDto.getAddress());
-                user.setMail(userDto.getMail());
-                user.setPassword(userDto.getPassword());
-                user.setBirthday(userDto.getBirthday());
-                user.setUpdate_at(LocalDateTime.now());
-                userRepository.save(user);
-                return UserMapper.userToDtoMap(user);
+                    user.setName(userDto.getName());
+                    user.setAddress(userDto.getAddress());
+                    user.setMail(userDto.getMail());
+                    user.setPassword(userDto.getPassword());
+                    user.setBirthday(userDto.getBirthday());
+                    user.setUpdate_at(LocalDateTime.now());
+                    userRepository.save(user);
+                    return UserMapper.userToDtoMap(user);
+                }else{
+                    throw new BankingExceptions("El usuario se encuentra inactivo, imposible actualizar");
+                }
             }
         }else{
             throw new BankingExceptions("No existe el usuario con el id " + id + "; no se puede actualizar el usuario");
@@ -103,43 +122,51 @@ public class UserService{
     public UserDto updateUser(Long id, UserDto userDto){
         if (userRepository.existsById(id)){
             User user = userRepository.findById(id).get();
-            if (userDto.getUsername()!=null){
-                User userName = userRepository.findByUsername(userDto.getUsername());
-                if (userName != null){
-                    if (user.getId()!=userName.getId()){
-                        throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+            if (user.getActivo()){
+                if (userDto.getUsername()!=null){
+                    User userName = userRepository.findByUsername(userDto.getUsername());
+                    if (userName != null){
+                        if (user.getId()!=userName.getId()){
+                            throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+                        }else{
+                            user.setUsername(userDto.getUsername());
+                        }
                     }else{
                         user.setUsername(userDto.getUsername());
                     }
-                }else{
-                    user.setUsername(userDto.getUsername());
+                    User userDni = userRepository.findByDni(userDto.getDni());
+                    if (userDni != null){
+                        if (user.getId()!=userDni.getId()){
+                            throw new BankingExceptions("Ya existe un usuario con el dni " + userDto.getDni() + ", imposible realizar la actualización del username");
+                        }
+                    }
+
+                }
+                if (userDto.getAddress()!= null){
+                    user.setAddress(userDto.getAddress());
+                }
+                if (userDto.getMail()!= null){
+                    user.setMail(userDto.getMail());
                 }
 
+                if (userDto.getName()!= null){
+                    user.setName(userDto.getName());
+                }
+                if (userDto.getBirthday()!= null){
+                    user.setBirthday(userDto.getBirthday());
+                }
+                if (userDto.getPassword()!= null){
+                    user.setPassword(userDto.getPassword());
+                }
+                if (userDto.getUsername()!= null){
+                    user.setUsername(userDto.getUsername());
+                }
+                user.setUpdate_at(LocalDateTime.now());
+                userRepository.save(user);
+                return UserMapper.userToDtoMap(user);
+            }else{
+                throw new BankingExceptions("El usuario se encuentra inactivo, imposible actualizar");
             }
-            if (userDto.getAddress()!= null){
-                user.setAddress(userDto.getAddress());
-            }
-            if (userDto.getMail()!= null){
-                user.setMail(userDto.getMail());
-            }
-            if (userDto.getDni()!= null){
-                user.setDni(userDto.getDni());
-            }
-            if (userDto.getName()!= null){
-                user.setName(userDto.getName());
-            }
-            if (userDto.getBirthday()!= null){
-                user.setBirthday(userDto.getBirthday());
-            }
-            if (userDto.getPassword()!= null){
-                user.setPassword(userDto.getPassword());
-            }
-            if (userDto.getUsername()!= null){
-                user.setUsername(userDto.getUsername());
-            }
-            user.setUpdate_at(LocalDateTime.now());
-            userRepository.save(user);
-            return UserMapper.userToDtoMap(user);
         }else{
             throw new BankingExceptions("No existe el usuario con el id " + id + " no se puede actualizar el usuario");
         }
@@ -176,6 +203,11 @@ public class UserService{
     }
     public boolean existsByUsername(String username){
         User user = userRepository.findByUsername(username);
+        return user != null;
+    }
+
+    public boolean existsByDni(String dni){
+        User user = userRepository.findByDni(dni);
         return user != null;
     }
 

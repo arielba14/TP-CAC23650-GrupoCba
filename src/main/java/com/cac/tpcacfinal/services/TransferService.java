@@ -45,29 +45,39 @@ public class TransferService {
         if (transfer.getAmount().compareTo(BigDecimal.ZERO)<1){
             throw new BankingExceptions("El monto a transferir deber ser mayor que cero, imposible realizar la transacción");
         }else{
-            if (!((transferRepository.existsById(transfer.getOriginAccount().getId())) && (transferRepository.existsById(transfer.getDestinedAccount().getId())))){
-                throw new BankingExceptions("Una de ls cuentas no existe, imposible realizar la transferencia");
+            if ((transfer.getOriginAccount()==null)||(transfer.getDestinedAccount()==null)) {
+                throw new BankingExceptions("Debe indicar las cuentas origen y destino de la transferencia, imposible gnerar la transferencia");
             }else{
-                Account origen = accountRepository.findById(transfer.getOriginAccount().getId()).get();
-                if (!origen.getActive()){
-                    throw new BankingExceptions("La cuenta origen no se encuentra activa, imposible realizar la transferencia");
-                }else {
-                    if (origen.getAmount().compareTo(transfer.getAmount()) < 0) {
-                        throw new BankingExceptions("La cuenta no posee fondos suficientes, imposible realizar la transferencia");
-                    } else {
-                        Account destino = accountRepository.findById(transfer.getDestinedAccount().getId()).get();
-                        if(!destino.getActive()){
-                            throw new BankingExceptions("La cuenta destino no se encuentra activa, imposible realizar la transferencia");
-                        }else {
-                            if ((((origen.getType() == AccountType.CAJA_AHORRO) || (origen.getType() == AccountType.CUENTA_CORRIENTE)) && ((destino.getType() == AccountType.CAJA_AHORRO_USD) || (destino.getType() == AccountType.CUENTA_CORRIENTE_USD))) || (((origen.getType() == AccountType.CAJA_AHORRO_USD) || (origen.getType() == AccountType.CUENTA_CORRIENTE_USD)) && ((destino.getType() == AccountType.CAJA_AHORRO) || (destino.getType() == AccountType.CUENTA_CORRIENTE)))) {
-                                throw new BankingExceptions("Las cuentas deben ser de la misma moneda para poder realizar la transacción, imposible realizar la transferencia");
-                            } else {
-                                Transfer nueva = TransferMapper.dtoToTransferMap(transfer);
-                                nueva.setDate(LocalDateTime.now());
-                                nueva.setOriginAccount(origen);
-                                nueva.setDestinedAccount(destino);
-                                transferRepository.save(nueva);
-                                return TransferMapper.transferToDtoMap(nueva);
+                if (!((transferRepository.existsById(transfer.getOriginAccount().getId())) && (transferRepository.existsById(transfer.getDestinedAccount().getId())))){
+                    throw new BankingExceptions("Una de ls cuentas no existe, imposible realizar la transferencia");
+                }else{
+                    Account origen = accountRepository.findById(transfer.getOriginAccount().getId()).get();
+                    if (!origen.getActive()){
+                        throw new BankingExceptions("La cuenta origen no se encuentra activa, imposible realizar la transferencia");
+                    }else {
+                        if (origen.getAmount().compareTo(transfer.getAmount()) < 0) {
+                            throw new BankingExceptions("La cuenta no posee fondos suficientes, imposible realizar la transferencia");
+                        } else {
+                            Account destino = accountRepository.findById(transfer.getDestinedAccount().getId()).get();
+                            if(!destino.getActive()){
+                                throw new BankingExceptions("La cuenta destino no se encuentra activa, imposible realizar la transferencia");
+                            }else {
+                                if ((((origen.getType() == AccountType.CAJA_AHORRO) || (origen.getType() == AccountType.CUENTA_CORRIENTE)) && ((destino.getType() == AccountType.CAJA_AHORRO_USD) || (destino.getType() == AccountType.CUENTA_CORRIENTE_USD))) || (((origen.getType() == AccountType.CAJA_AHORRO_USD) || (origen.getType() == AccountType.CUENTA_CORRIENTE_USD)) && ((destino.getType() == AccountType.CAJA_AHORRO) || (destino.getType() == AccountType.CUENTA_CORRIENTE)))) {
+                                    throw new BankingExceptions("Las cuentas deben ser de la misma moneda para poder realizar la transacción, imposible realizar la transferencia");
+                                } else {
+                                    Transfer nueva = TransferMapper.dtoToTransferMap(transfer);
+                                    nueva.setDate(LocalDateTime.now());
+                                    nueva.setAmount(transfer.getAmount());
+                                    nueva.setOriginAccount(origen);
+                                    nueva.setDestinedAccount(destino);
+                                    nueva.setDescription(transfer.getDescription());
+                                    transferRepository.save(nueva);
+                                    origen.setAmount(origen.getAmount().subtract(transfer.getAmount()));
+                                    destino.setAmount(destino.getAmount().add(transfer.getAmount()));
+                                    accountRepository.save(origen);
+                                    accountRepository.save(destino);
+                                    return TransferMapper.transferToDtoMap(nueva);
+                                }
                             }
                         }
                     }

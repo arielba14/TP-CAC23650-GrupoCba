@@ -20,29 +20,29 @@ public class TransferController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TransferDto>> getTransactions(){
+    public ResponseEntity<List<TransferDto>> getTranfers(){
 
         return ResponseEntity.status(HttpStatus.OK).body(service.getTransfers());
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<TransferDto> getTransactionById(@PathVariable Long id){
+    public ResponseEntity<TransferDto> getTransferById(@PathVariable Long id){
 
         return ResponseEntity.status(HttpStatus.OK).body(service.getTransferById(id));
     }
 
     @PostMapping
-    public ResponseEntity<TransferDto> createdTransaction(@RequestBody TransferDto transfer){
+    public ResponseEntity<TransferDto> createdTransfer(@RequestBody TransferDto transfer){
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createTransfer(transfer));
     }
 
     @PutMapping
-    public ResponseEntity<TransferDto> updateTransaction(@PathVariable Long id, @RequestBody TransferDto transfer){
+    public ResponseEntity<TransferDto> updateTranfer(@PathVariable Long id, @RequestBody TransferDto transfer){
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createTransfer(transfer));
     }
 
     @DeleteMapping (value = "/{id}")
-    public String deleteTransaction(@PathVariable Long id){
-        return service.deleteTransaction(id);
+    public boolean deleteTranfer(@PathVariable Long id){
+        return false;
     }
 }

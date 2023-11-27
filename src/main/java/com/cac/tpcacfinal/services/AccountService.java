@@ -85,7 +85,7 @@ public class AccountService {
         if (accountRepository.existsById(id)){
             Account account = accountRepository.findById(id).get();
             if (account.getActive()){
-                if (dto.getAlias()!= ""){
+                if (dto.getAlias()!= null){
                     AccountDto alias = findByAlias(dto.getAlias());
                     if (alias != null){
                         if (dto.getId()!=alias.getId()){
@@ -97,7 +97,7 @@ public class AccountService {
                         account.setAlias(dto.getAlias());
                     }
                 }
-                if (dto.getCbu()!= ""){
+                if (dto.getCbu()!= null){
                     AccountDto cbu = findByCbu(dto.getCbu());
                     if (cbu != null){
                         if (dto.getId()!= cbu.getId()) {
