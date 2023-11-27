@@ -23,6 +23,12 @@ public class AccountController {
         this.accountService = service;
     }
 
+    @GetMapping(value="/active")
+    public ResponseEntity<List<AccountDto>> getAccountsActive(){
+
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.getAccountsActive());
+    }
+
     @GetMapping
     public ResponseEntity<List<AccountDto>> getAccounts(){
 

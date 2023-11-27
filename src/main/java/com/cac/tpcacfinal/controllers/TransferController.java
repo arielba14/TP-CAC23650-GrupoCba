@@ -20,13 +20,13 @@ public class TransferController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Transfer>> getTransactions(){
+    public ResponseEntity<List<TransferDto>> getTransactions(){
 
         return ResponseEntity.status(HttpStatus.OK).body(service.getTransfers());
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Transfer> getTransactionById(@PathVariable Long id){
+    public ResponseEntity<TransferDto> getTransactionById(@PathVariable Long id){
 
         return ResponseEntity.status(HttpStatus.OK).body(service.getTransferById(id));
     }

@@ -1,12 +1,19 @@
 package com.cac.tpcacfinal.services;
 
 
+import com.cac.tpcacfinal.entities.Account;
 import com.cac.tpcacfinal.entities.Transfer;
+import com.cac.tpcacfinal.entities.dtos.AccountDto;
 import com.cac.tpcacfinal.entities.dtos.TransferDto;
+import com.cac.tpcacfinal.exceptions.BankingExceptions;
 import com.cac.tpcacfinal.mappers.TransferMapper;
+import com.cac.tpcacfinal.repositories.AccountRepository;
 import com.cac.tpcacfinal.repositories.TransferRepository;
+import com.cac.tpcacfinal.utils.AccountType;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,36 +21,59 @@ import java.util.stream.Collectors;
 public class TransferService {
 
     private final TransferRepository transferRepository;
+    private final AccountRepository accountRepository;
 
-    private TransferService(TransferRepository transferRepository) {
+    private TransferService(TransferRepository transferRepository, AccountRepository accountRepository) {
         this.transferRepository = transferRepository;
+        this.accountRepository = accountRepository;
     }
 
-    public List<Transfer> getTransfers(){
-        return transferRepository.findAll();
+    public List<TransferDto> getTransfers(){
+
+        return transferRepository.findAll().stream().map(transfer -> TransferMapper.transferToDtoMap(transfer)).collect(Collectors.toList());
     }
 
-    public Transfer getTransferById(Long id){
+    public TransferDto getTransferById(Long id){
         if(transferRepository.existsById(id)){
-            return transferRepository.findById(id).get();
+            return TransferMapper.transferToDtoMap(transferRepository.findById(id).get());
         }else{
             return null;
         }
     }
 
     public TransferDto createTransfer(TransferDto transfer){
-        Transfer nueva = TransferMapper.dtoToTransferMap(transfer);
-        //preguntar que existann las dos cuentaas
-        //preguntar si el importe a transferir es mator que el saldo de la cuenta origen
-        //que el tipo de las cuentas sean de la misma moneda
-        //que no sean las mismas cuentas origen y destino
-        transferRepository.save(nueva);
-        return TransferMapper.transferToDtoMap(nueva);
+        if (transfer.getAmount().compareTo(BigDecimal.ZERO)<1){
+            throw new BankingExceptions("El monto a transferir deber ser mayor que cero, imposible realizar la transacción");
+        }else{
+            if (!((transferRepository.existsById(transfer.getOriginAccount().getId())) && (transferRepository.existsById(transfer.getDestinedAccount().getId())))){
+                throw new BankingExceptions("Una de ls cuentas no existe, imposible realizar la transferencia");
+            }else{
+                Account origen = accountRepository.findById(transfer.getOriginAccount().getId()).get();
+                if (!origen.getActive()){
+                    throw new BankingExceptions("La cuenta origen no se encuentra activa, imposible realizar la transferencia");
+                }else {
+                    if (origen.getAmount().compareTo(transfer.getAmount()) < 0) {
+                        throw new BankingExceptions("La cuenta no posee fondos suficientes, imposible realizar la transferencia");
+                    } else {
+                        Account destino = accountRepository.findById(transfer.getDestinedAccount().getId()).get();
+                        if(!destino.getActive()){
+                            throw new BankingExceptions("La cuenta destino no se encuentra activa, imposible realizar la transferencia");
+                        }else {
+                            if ((((origen.getType() == AccountType.CAJA_AHORRO) || (origen.getType() == AccountType.CUENTA_CORRIENTE)) && ((destino.getType() == AccountType.CAJA_AHORRO_USD) || (destino.getType() == AccountType.CUENTA_CORRIENTE_USD))) || (((origen.getType() == AccountType.CAJA_AHORRO_USD) || (origen.getType() == AccountType.CUENTA_CORRIENTE_USD)) && ((destino.getType() == AccountType.CAJA_AHORRO) || (destino.getType() == AccountType.CUENTA_CORRIENTE)))) {
+                                throw new BankingExceptions("Las cuentas deben ser de la misma moneda para poder realizar la transacción, imposible realizar la transferencia");
+                            } else {
+                                Transfer nueva = TransferMapper.dtoToTransferMap(transfer);
+                                nueva.setDate(LocalDateTime.now());
+                                nueva.setOriginAccount(origen);
+                                nueva.setDestinedAccount(destino);
+                                transferRepository.save(nueva);
+                                return TransferMapper.transferToDtoMap(nueva);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    public String deleteTransaction(Long id){
-
-        transferRepository.deleteById(id);
-        return "";
-    }
 }

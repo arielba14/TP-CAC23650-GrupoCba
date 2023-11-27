@@ -50,44 +50,51 @@ public class UserService{
     }
 
     public UserDto createUser(UserDto userDto){
-        if (!existsByUsername(userDto.getUsername())){
-            User user =UserMapper.dtoToUserMap(userDto);
-            user.setCrated_at(LocalDateTime.now());
-            user.setUpdate_at(LocalDateTime.now());
-            user.setActivo(true);
-            User nuevo = userRepository.save(user);
-            userDto = UserMapper.userToDtoMap(nuevo);
-            userDto.setPassword("*********");
-            return userDto;
+        if ((userDto.getUsername()==null) || (userDto.getDni()== null) || (userDto.getName()==null)){
+            throw new BankingExceptions("El nombre de usuario, dni y nombre no pueden ser vacios, imposible crear el usuario");
         }else{
-            throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", no se puede crear el usuario");
+            if (!existsByUsername(userDto.getUsername())){
+                User user =UserMapper.dtoToUserMap(userDto);
+                user.setCrated_at(LocalDateTime.now());
+                user.setUpdate_at(LocalDateTime.now());
+                user.setActivo(true);
+                User nuevo = userRepository.save(user);
+                userDto = UserMapper.userToDtoMap(nuevo);
+                userDto.setPassword("*********");
+                return userDto;
+            }else{
+                throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", no se puede crear el usuario");
+            }
         }
     }
 
     public UserDto updateUserFull(Long id, UserDto userDto){
         if (userRepository.existsById(id)){
-
-            User user = userRepository.findById(id).get();
-            User userName = userRepository.findByUsername(userDto.getUsername());
-            if (userName!= null){
-                if (user.getId()!=userName.getId()){
-                    throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
-                }else{
+            if ((userDto.getUsername()==null) || (userDto.getDni()== null) || (userDto.getName()==null)){
+                throw new BankingExceptions("El nombre de usuario, dni y nombre no pueden ser vacios, imposible actualizar el usuario");
+            }else {
+                User user = userRepository.findById(id).get();
+                User userName = userRepository.findByUsername(userDto.getUsername());
+                if (userName != null) {
+                    if (user.getId() != userName.getId()) {
+                        throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+                    } else {
+                        user.setUsername(userDto.getUsername());
+                    }
+                } else {
                     user.setUsername(userDto.getUsername());
                 }
-            }else{
-                user.setUsername(userDto.getUsername());
-            }
 
-            user.setName(userDto.getName());
-            user.setDni(userDto.getDni());
-            user.setAddress(userDto.getAddress());
-            user.setMail(userDto.getMail());
-            user.setPassword(userDto.getPassword());
-            user.setBirthday(userDto.getBirthday());
-            user.setUpdate_at(LocalDateTime.now());
-            userRepository.save(user);
-            return UserMapper.userToDtoMap(user);
+                user.setName(userDto.getName());
+                user.setDni(userDto.getDni());
+                user.setAddress(userDto.getAddress());
+                user.setMail(userDto.getMail());
+                user.setPassword(userDto.getPassword());
+                user.setBirthday(userDto.getBirthday());
+                user.setUpdate_at(LocalDateTime.now());
+                userRepository.save(user);
+                return UserMapper.userToDtoMap(user);
+            }
         }else{
             throw new BankingExceptions("No existe el usuario con el id " + id + "; no se puede actualizar el usuario");
         }
