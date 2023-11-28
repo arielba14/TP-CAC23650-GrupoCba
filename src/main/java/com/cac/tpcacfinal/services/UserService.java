@@ -57,7 +57,7 @@ public class UserService{
 
     public UserDto createUser(UserDto userDto){
         if ((userDto.getUsername()==null) || (userDto.getDni()== null) || (userDto.getName()==null)){
-            throw new BankingExceptions("El nombre de usuario, dni y nombre no pueden ser vacios, imposible crear el usuario");
+            throw new BankingExceptions("El nombre de usuario, dni y nombre no pueden ser vacios. Imposible crear el usuario");
         }else{
             if (!existsByUsername(userDto.getUsername())){
                 if (!existsByDni(userDto.getDni())){
@@ -81,7 +81,7 @@ public class UserService{
     public UserDto updateUserFull(Long id, UserDto userDto){
         if (userRepository.existsById(id)){
             if ((userDto.getUsername()==null) || (userDto.getDni()== null) || (userDto.getName()==null)){
-                throw new BankingExceptions("El nombre de usuario, dni y nombre no pueden ser vacios, imposible actualizar el usuario");
+                throw new BankingExceptions("El nombre de usuario, dni y nombre no pueden ser vacios. Imposible actualizar el usuario");
             }else {
                 User user = userRepository.findById(id).get();
                 if (user.getActivo()){
@@ -115,7 +115,7 @@ public class UserService{
                 }
             }
         }else{
-            throw new BankingExceptions("No existe el usuario con el id " + id + "; no se puede actualizar el usuario");
+            throw new BankingExceptions("No existe el usuario con el id " + id + ", no se puede actualizar el usuario");
         }
     }
 
@@ -168,7 +168,7 @@ public class UserService{
                 throw new BankingExceptions("El usuario se encuentra inactivo, imposible actualizar");
             }
         }else{
-            throw new BankingExceptions("No existe el usuario con el id " + id + " no se puede actualizar el usuario");
+            throw new BankingExceptions("No existe el usuario con el id " + id + ", no se puede actualizar el usuario");
         }
     }
 

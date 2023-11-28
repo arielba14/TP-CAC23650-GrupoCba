@@ -101,7 +101,7 @@ public class AccountService {
                     AccountDto cbu = findByCbu(dto.getCbu());
                     if (cbu != null){
                         if (dto.getId()!= cbu.getId()) {
-                            throw new BankingExceptions("Ya existe una cuenta con el CBU: " + dto.getCbu() + ", imposiblre actualizar la cuenta");
+                            throw new BankingExceptions("Ya existe una cuenta con el CBU: " + dto.getCbu() + ", imposible actualizar la cuenta");
                         }else{
                             account.setCbu(dto.getCbu());
                         }
@@ -138,7 +138,7 @@ public class AccountService {
                     AccountDto cbu = findByCbu(dto.getCbu());
                     if (cbu!=null){
                         if (dto.getId()!= cbu.getId()) {
-                            throw new BankingExceptions("Ya existe una cuenta con el CBU: " + dto.getCbu() + ", imposiblre actualizar la cuenta");
+                            throw new BankingExceptions("Ya existe una cuenta con el CBU: " + dto.getCbu() + ", imposible actualizar la cuenta");
                         }else{
                             account.setCbu(dto.getCbu());
                         }
