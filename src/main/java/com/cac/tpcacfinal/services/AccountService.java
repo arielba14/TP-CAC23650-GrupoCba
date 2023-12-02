@@ -27,16 +27,22 @@ public class AccountService {
     }
 
     public List<AccountDto> getAccountsActive(){
-        return accountRepository.findAll().stream().filter(Account::getActive).map(account -> AccountMapper.accountToDtoMap(account)).collect(Collectors.toList());
+        List<AccountDto> lista =  accountRepository.findAll().stream().filter(Account::getActive).map(account -> AccountMapper.accountToDtoMap(account)).collect(Collectors.toList());
+        lista.forEach(accountDto -> accountDto.getUser().setPassword("*********"));
+        return lista;
     }
 
     public List<AccountDto> getAccounts(){
-        return accountRepository.findAll().stream().map(account -> AccountMapper.accountToDtoMap(account)).collect(Collectors.toList());
+        List<AccountDto> lista = accountRepository.findAll().stream().map(account -> AccountMapper.accountToDtoMap(account)).collect(Collectors.toList());
+        lista.forEach(accountDto -> accountDto.getUser().setPassword("*********"));
+        return lista;
     }
 
     public AccountDto getAccountById(Long id){
         if (accountRepository.existsById(id)){
-            return AccountMapper.accountToDtoMap(accountRepository.findById(id).get());
+            AccountDto dto = AccountMapper.accountToDtoMap(accountRepository.findById(id).get());
+            dto.getUser().setPassword("*********");
+            return dto;
         }else{
             return null;
         }
@@ -76,6 +82,7 @@ public class AccountService {
                 account.setUser(userRepository.findById(dto.getUser().getId()).get());
                 Account nueva = accountRepository.save(account);
                 dto = AccountMapper.accountToDtoMap(nueva);
+                dto.getUser().setPassword("*********");
                 return dto;
             }
         }
@@ -98,21 +105,10 @@ public class AccountService {
                         account.setAlias(dto.getAlias());
                     }
                 }
-                /*if (dto.getCbu()!= null){
-                    AccountDto cbu = findByCbu(dto.getCbu());
-                    if (cbu != null){
-                        if (dto.getId()!= cbu.getId()) {
-                            throw new BankingExceptions("Ya existe una cuenta con el CBU: " + dto.getCbu() + ", imposible actualizar la cuenta");
-                        }else{
-                            account.setCbu(dto.getCbu());
-                        }
-                    }else{
-                        account.setCbu(dto.getCbu());
-                    }
-                */
             }else{
                 throw new BankingExceptions("La cuenta no está activa, imposible actualizar");
             }
+            account.getUser().setPassword("*********");
             return AccountMapper.accountToDtoMap(account);
         }else {
             throw  new BankingExceptions("No existe una cuenta con el id + " + id + ", imposible actualizar la cuenta");
@@ -135,17 +131,6 @@ public class AccountService {
                     }else{
                         account.setAlias(dto.getAlias());
                     }
-
-                    /*AccountDto cbu = findByCbu(dto.getCbu());
-                    if (cbu!=null){
-                        if (dto.getId()!= cbu.getId()) {
-                            throw new BankingExceptions("Ya existe una cuenta con el CBU: " + dto.getCbu() + ", imposible actualizar la cuenta");
-                        }else{
-                            account.setCbu(dto.getCbu());
-                        }
-                    }else{
-                        account.setCbu(dto.getCbu());
-                    }*/
 
                     return AccountMapper.accountToDtoMap(account);
                 }else{
