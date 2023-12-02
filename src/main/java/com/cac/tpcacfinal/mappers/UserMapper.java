@@ -17,12 +17,13 @@ public class UserMapper {
         user.setName(dto.getName());
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
+        user.setAddress(dto.getAddress());
         user.setMail(dto.getMail());
         user.setDni(dto.getDni());
         user.setBirthday(dto.getBirthday());
         user.setActivo(dto.getActivo());
         user.setAddress(dto.getAddress());
-        user.setCrated_at(dto.getCrated_at());
+        user.setCreated_at(dto.getCreated_at());
         user.setUpdate_at(dto.getUpdate_at());
         return user;
     }
@@ -38,7 +39,7 @@ public class UserMapper {
         dto.setDni(user.getDni());
         dto.setBirthday(user.getBirthday());
         dto.setActivo(user.getActivo());
-        dto.setCrated_at(user.getCrated_at());
+        dto.setCreated_at(user.getCreated_at());
         dto.setUpdate_at(user.getUpdate_at());
         if (user.getAccounts()!=null) {
             dto.setIdAccounts(user.getAccounts().stream().map(account -> account.getId()).collect(Collectors.toList()));

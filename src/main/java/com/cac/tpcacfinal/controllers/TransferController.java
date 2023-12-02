@@ -36,6 +36,15 @@ public class TransferController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createTransfer(transfer));
     }
 
+    @PostMapping(value = "/ventaDolares")
+    public ResponseEntity<TransferDto> dollarSales(@RequestBody TransferDto transfer){
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.dollarSales(transfer));
+    }
+    @PostMapping(value = "/compraDolares")
+    public ResponseEntity<TransferDto> dollarPurchase(@RequestBody TransferDto transfer){
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.dollarPurchase(transfer));
+    }
+
     @PutMapping
     public ResponseEntity<TransferDto> updateTranfer(@PathVariable Long id, @RequestBody TransferDto transfer){
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createTransfer(transfer));

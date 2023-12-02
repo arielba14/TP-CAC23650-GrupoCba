@@ -28,7 +28,7 @@ public class User {
     private String birthday;
     private Boolean activo;
     private String mail;
-    private LocalDateTime crated_at;
+    private LocalDateTime created_at;
     private LocalDateTime update_at;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Account> accounts; //cuentas que tiene el usuario

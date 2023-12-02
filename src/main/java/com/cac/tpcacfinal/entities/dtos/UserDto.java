@@ -25,7 +25,7 @@ public class UserDto {
     private String birthday;
     private Boolean activo;
     private String mail;
-    private LocalDateTime crated_at;
+    private LocalDateTime created_at;
     private LocalDateTime update_at;
     private List<Long> idAccounts;
 

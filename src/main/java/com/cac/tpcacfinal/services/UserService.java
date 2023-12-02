@@ -62,7 +62,7 @@ public class UserService{
             if (!existsByUsername(userDto.getUsername())){
                 if (!existsByDni(userDto.getDni())){
                     User user =UserMapper.dtoToUserMap(userDto);
-                    user.setCrated_at(LocalDateTime.now());
+                    user.setCreated_at(LocalDateTime.now());
                     user.setUpdate_at(LocalDateTime.now());
                     user.setActivo(true);
                     User nuevo = userRepository.save(user);
