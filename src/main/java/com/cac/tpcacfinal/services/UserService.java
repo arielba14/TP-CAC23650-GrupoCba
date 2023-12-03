@@ -100,6 +100,8 @@ public class UserService{
                         if (user.getId()!=userDni.getId()){
                             throw new BankingExceptions("Ya existe un usuario con el dni " + userDto.getDni() + ", imposible realizar la actualización del username");
                         }
+                    }else{
+                        user.setDni(userDto.getDni());
                     }
 
                     user.setName(userDto.getName());
@@ -134,13 +136,16 @@ public class UserService{
                     }else{
                         user.setUsername(userDto.getUsername());
                     }
+                }
+                if (userDto.getDni()!=null){
                     User userDni = userRepository.findByDni(userDto.getDni());
                     if (userDni != null){
                         if (user.getId()!=userDni.getId()){
                             throw new BankingExceptions("Ya existe un usuario con el dni " + userDto.getDni() + ", imposible realizar la actualización del username");
                         }
+                    }else{
+                        user.setDni(userDto.getDni());
                     }
-
                 }
                 if (userDto.getAddress()!= null){
                     user.setAddress(userDto.getAddress());

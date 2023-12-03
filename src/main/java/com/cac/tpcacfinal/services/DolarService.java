@@ -7,7 +7,8 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class DolarService {
-    private final String apiUrl = "https://dolarapi.com/v1/dolares/oficial";
+    private final String oficial = "https://dolarapi.com/v1/dolares/oficial";
+    private final String solidario = "https://dolarapi.com/v1/dolares/solidario";
 
     private final RestTemplate restTemplate;
 
@@ -15,7 +16,8 @@ public class DolarService {
         this.restTemplate = restTemplate.build();
     }
 
-    public DolarDto getDolar(){
-        return restTemplate.getForObject(apiUrl, DolarDto.class);
+    public DolarDto getDolarOficial(){
+        return restTemplate.getForObject(oficial, DolarDto.class);
     }
+    public DolarDto getDolarSolidario() {return restTemplate.getForObject(solidario, DolarDto.class);}
 }

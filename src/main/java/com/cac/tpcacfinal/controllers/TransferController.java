@@ -37,7 +37,8 @@ public class TransferController {
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(service.createTransfer(transfer));
         }catch(BankingExceptions e){
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("Exception: " + e.getMessage());
             return null;
         }
     }
@@ -47,7 +48,7 @@ public class TransferController {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(service.dollarSales(transfer));
         }catch (BankingExceptions e){
-            e.printStackTrace();
+            System.out.println("Exception: " + e.getMessage());
             return null;
         }
     }
@@ -56,7 +57,7 @@ public class TransferController {
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(service.dollarPurchase(transfer));
         }catch (BankingExceptions e){
-            e.printStackTrace();
+            System.out.println("Exception: " + e.getMessage());
             return null;
         }
     }
@@ -66,7 +67,7 @@ public class TransferController {
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(service.createTransfer(transfer));
         }catch (BankingExceptions e){
-            e.printStackTrace();
+            System.out.println("Exception: " + e.getMessage());
             return null;
         }
     }

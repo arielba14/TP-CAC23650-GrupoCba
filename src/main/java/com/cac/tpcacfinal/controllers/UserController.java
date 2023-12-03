@@ -46,7 +46,7 @@ public class UserController {
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(service.createUser(user));
         }catch(BankingExceptions e){
-            e.printStackTrace();
+            System.out.println("Exception: " + e.getMessage());
             return null;
         }
     }
@@ -56,7 +56,7 @@ public class UserController {
         try{
             return ResponseEntity.status(HttpStatus.OK).body(service.updateUserFull(id, user));
         }catch(BankingExceptions e){
-            e.printStackTrace();
+            System.out.println("Exception: " + e.getMessage());
             return null;
         }
     }
@@ -66,7 +66,7 @@ public class UserController {
         try{
             return ResponseEntity.status(HttpStatus.OK).body(service.updateUser(id, user));
         }catch(BankingExceptions e){
-            e.printStackTrace();
+            System.out.println("Exception: " + e.getMessage());
             return null;
         }
     }

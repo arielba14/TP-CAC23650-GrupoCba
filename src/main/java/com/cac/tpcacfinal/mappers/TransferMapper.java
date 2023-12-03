@@ -24,6 +24,8 @@ public class TransferMapper {
         dto.setDescription(transfer.getDescription());
         dto.setOriginAccount(AccountMapper.accountToDtoMap(transfer.getOriginAccount()));
         dto.setDestinedAccount(AccountMapper.accountToDtoMap(transfer.getDestinedAccount()));
+        dto.getDestinedAccount().getUser().setPassword("********");
+        dto.getOriginAccount().getUser().setPassword("********");
         return dto;
     }
 }

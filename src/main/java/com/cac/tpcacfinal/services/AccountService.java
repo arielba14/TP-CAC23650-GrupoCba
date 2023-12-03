@@ -147,8 +147,8 @@ public class AccountService {
             Account account = accountRepository.findById(id).get();
             if (account.getActive()) {
                 account.setActive(false);
-                account.setCbu("");
-                account.setAlias("");
+                account.setCbu("CBU cuentaInactiva "+ id);
+                account.setAlias("Alias cuentaInactiva " + id);
                 accountRepository.save(account);
                 return true;
             }else{
@@ -173,7 +173,7 @@ public class AccountService {
         while ((cbu=="")||(existsAccountByCbu(cbu))){
             cbu = "";
             for(int i = 0; i<22; i++) {
-                int indice = (int) (Math.random() * 9);
+                int indice = (int) (Math.random() * 10);
                 cbu += indice;
             }
         }

@@ -15,8 +15,11 @@ public class DolarController {
         this.dolarService = dolarService;
     }
 
-    @GetMapping
-    public DolarDto getDolar(){
-        return dolarService.getDolar();
+    @GetMapping(value = "oficial")
+    public DolarDto dolarOficial(){
+        return dolarService.getDolarOficial();
     }
+
+    @GetMapping (value = "solidario")
+    public DolarDto dolarSolidario() {return dolarService.getDolarSolidario();}
 }

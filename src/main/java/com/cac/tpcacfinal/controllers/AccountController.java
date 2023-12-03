@@ -45,7 +45,7 @@ public class AccountController {
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(account));
         }catch(BankingExceptions e){
-            e.printStackTrace();
+            System.out.println("Exception: " + e.getMessage());
             return null;
         }
     }
@@ -55,7 +55,7 @@ public class AccountController {
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(accountService.updateAccountFull(id, account));
         }catch(BankingExceptions e){
-            e.printStackTrace();
+            System.out.println("Exception: " + e.getMessage());
             return null;
         }
     }
@@ -65,7 +65,7 @@ public class AccountController {
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(accountService.updateAccount(id, account));
         }catch(BankingExceptions e){
-            e.printStackTrace();
+            System.out.println("Exception: " + e.getMessage());
             return null;
         }
     }
