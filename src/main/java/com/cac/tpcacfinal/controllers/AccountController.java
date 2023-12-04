@@ -25,7 +25,6 @@ public class AccountController {
 
     @GetMapping(value="/active")
     public ResponseEntity<List<AccountDto>> getAccountsActive(){
-
         return ResponseEntity.status(HttpStatus.OK).body(accountService.getAccountsActive());
     }
 

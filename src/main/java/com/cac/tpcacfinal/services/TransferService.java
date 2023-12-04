@@ -75,8 +75,8 @@ public class TransferService {
                                         nueva.setDate(LocalDateTime.now());
                                         nueva.setOriginAccount(origen);
                                         nueva.setDestinedAccount(destino);
-                                        nueva.setDescription(transfer.getDescription());
                                         BigDecimal cotizacion = new BigDecimal(dolarService.getDolarOficial().getCompra());
+                                        nueva.setDescription("Operación de venta, cotización: $" + cotizacion);
                                         BigDecimal importeDolar = transfer.getAmount().multiply(cotizacion);
                                         nueva.setAmount(importeDolar);
                                         transferRepository.save(nueva);
@@ -126,8 +126,8 @@ public class TransferService {
                                         nueva.setDate(LocalDateTime.now());
                                         nueva.setOriginAccount(origen);
                                         nueva.setDestinedAccount(destino);
-                                        nueva.setDescription(transfer.getDescription());
                                         BigDecimal cotizacion = new BigDecimal(dolarService.getDolarSolidario().getVenta());
+                                        nueva.setDescription("Operación de compra, cotización: $" + cotizacion);
                                         BigDecimal importeDolar = transfer.getAmount().divide(cotizacion,2, RoundingMode.HALF_UP);
                                         nueva.setAmount(importeDolar);
                                         transferRepository.save(nueva);
