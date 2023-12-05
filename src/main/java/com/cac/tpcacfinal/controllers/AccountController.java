@@ -43,8 +43,8 @@ public class AccountController {
     public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto account){
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(account));
-        }catch(BankingExceptions e){
-            System.out.println("Exception: " + e.getMessage());
+        }catch(RuntimeException e){
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
             return null;
         }
     }
@@ -53,8 +53,8 @@ public class AccountController {
     public ResponseEntity<AccountDto> updateAccountFull(@PathVariable Long id, @RequestBody AccountDto account){
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(accountService.updateAccountFull(id, account));
-        }catch(BankingExceptions e){
-            System.out.println("Exception: " + e.getMessage());
+        }catch(RuntimeException e){
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
             return null;
         }
     }
@@ -63,8 +63,8 @@ public class AccountController {
     public ResponseEntity<AccountDto> updateAccount(@PathVariable Long id, @RequestBody AccountDto account){
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(accountService.updateAccount(id, account));
-        }catch(BankingExceptions e){
-            System.out.println("Exception: " + e.getMessage());
+        }catch(RuntimeException e){
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
             return null;
         }
     }
@@ -75,8 +75,23 @@ public class AccountController {
     }
 
     @PatchMapping(value = "/ingreso/{id}")
-    public ResponseEntity<Boolean> ingresarDinero(@PathVariable Long id, @RequestBody TransferDto amount){
-        return ResponseEntity.status(HttpStatus.OK).body(accountService.ingresarDinero(id, amount));
+    public ResponseEntity<Boolean> enterCash(@PathVariable Long id, @RequestBody TransferDto amount){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(accountService.enterCash(id, amount));
+        }catch(RuntimeException e){
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+            return null;
+        }
+    }
+
+    @PatchMapping(value = "/extraer/{id}")
+    public ResponseEntity<Boolean> extractCash(@PathVariable Long id, @RequestBody TransferDto amount){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(accountService.extractCash(id, amount));
+        }catch(RuntimeException e){
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+            return null;
+        }
     }
 
 

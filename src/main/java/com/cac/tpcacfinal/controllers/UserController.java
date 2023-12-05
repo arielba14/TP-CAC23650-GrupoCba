@@ -45,8 +45,8 @@ public class UserController {
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto user){
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(service.createUser(user));
-        }catch(BankingExceptions e){
-            System.out.println("Exception: " + e.getMessage());
+        }catch(RuntimeException e){
+            System.out.println(e.getClass().getName() + " " + e.getMessage());
             return null;
         }
     }
@@ -55,8 +55,8 @@ public class UserController {
     public ResponseEntity<UserDto> updateUserFull(@PathVariable Long id, @RequestBody UserDto user){
         try{
             return ResponseEntity.status(HttpStatus.OK).body(service.updateUserFull(id, user));
-        }catch(BankingExceptions e){
-            System.out.println("Exception: " + e.getMessage());
+        }catch(RuntimeException e){
+            System.out.println(e.getClass().getName() + " " + e.getMessage());
             return null;
         }
     }
@@ -65,8 +65,8 @@ public class UserController {
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto user){
         try{
             return ResponseEntity.status(HttpStatus.OK).body(service.updateUser(id, user));
-        }catch(BankingExceptions e){
-            System.out.println("Exception: " + e.getMessage());
+        }catch(RuntimeException e){
+                System.out.println(e.getClass().getName() + " " + e.getMessage());
             return null;
         }
     }

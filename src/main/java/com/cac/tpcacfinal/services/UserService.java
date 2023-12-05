@@ -3,6 +3,9 @@ package com.cac.tpcacfinal.services;
 import com.cac.tpcacfinal.entities.User;
 import com.cac.tpcacfinal.entities.dtos.UserDto;
 import com.cac.tpcacfinal.exceptions.BankingExceptions;
+import com.cac.tpcacfinal.exceptions.UserExistingExceptions;
+import com.cac.tpcacfinal.exceptions.UserInactiveExceptions;
+import com.cac.tpcacfinal.exceptions.UserNotFoundExceptions;
 import com.cac.tpcacfinal.mappers.UserMapper;
 import com.cac.tpcacfinal.repositories.AccountRepository;
 import com.cac.tpcacfinal.repositories.UserRepository;
@@ -70,10 +73,12 @@ public class UserService{
                     userDto.setPassword("*********");
                     return userDto;
                 }else{
-                    throw new BankingExceptions("Ya existe un usuario con el dni " + userDto.getDni() + ", no se puede crear el usuario");
+                    //throw new BankingExceptions("Ya existe un usuario con el dni " + userDto.getDni() + ", no se puede crear el usuario");
+                    throw new UserExistingExceptions("Ya existe un usuario con el dni " + userDto.getDni() + ", no se puede crear el usuario");
                 }
             }else{
-                throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", no se puede crear el usuario");
+                //throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", no se puede crear el usuario");
+               throw new UserExistingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", no se puede crear el usuario");
             }
         }
     }
@@ -88,7 +93,8 @@ public class UserService{
                     User userName = userRepository.findByUsername(userDto.getUsername());
                     if (userName != null) {
                         if (user.getId() != userName.getId()) {
-                            throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+                            //throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+                            throw new UserExistingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", no se puede crear el usuario");
                         } else {
                             user.setUsername(userDto.getUsername());
                         }
@@ -98,7 +104,8 @@ public class UserService{
                     User userDni = userRepository.findByDni(userDto.getDni());
                     if (userDni != null){
                         if (user.getId()!=userDni.getId()){
-                            throw new BankingExceptions("Ya existe un usuario con el dni " + userDto.getDni() + ", imposible realizar la actualización del username");
+                            //throw new BankingExceptions("Ya existe un usuario con el dni " + userDto.getDni() + ", imposible realizar la actualización del username");
+                            throw new UserExistingExceptions("Ya existe un usuario con el dni " + userDto.getDni() + ", no se puede crear el usuario");
                         }
                     }else{
                         user.setDni(userDto.getDni());
@@ -113,11 +120,13 @@ public class UserService{
                     userRepository.save(user);
                     return UserMapper.userToDtoMap(user);
                 }else{
-                    throw new BankingExceptions("El usuario se encuentra inactivo, imposible actualizar");
+                    //throw new BankingExceptions("El usuario se encuentra inactivo, imposible actualizar");
+                    throw new UserInactiveExceptions("El usuario se encuentra inactivo, imposible actualizar");
                 }
             }
         }else{
-            throw new BankingExceptions("No existe el usuario con el id " + id + ", no se puede actualizar el usuario");
+            //throw new BankingExceptions("No existe el usuario con el id " + id + ", no se puede actualizar el usuario");
+            throw  new UserNotFoundExceptions("No existe el usuario con el id " + id + ", no se puede actualizar el usuario");
         }
     }
 
@@ -129,7 +138,8 @@ public class UserService{
                     User userName = userRepository.findByUsername(userDto.getUsername());
                     if (userName != null){
                         if (user.getId()!=userName.getId()){
-                            throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+                            //throw new BankingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", imposible realizar la actualización del username");
+                            throw new UserExistingExceptions("Ya existe un usuario con el username " + userDto.getUsername() + ", no se puede crear el usuario");
                         }else{
                             user.setUsername(userDto.getUsername());
                         }
@@ -141,7 +151,8 @@ public class UserService{
                     User userDni = userRepository.findByDni(userDto.getDni());
                     if (userDni != null){
                         if (user.getId()!=userDni.getId()){
-                            throw new BankingExceptions("Ya existe un usuario con el dni " + userDto.getDni() + ", imposible realizar la actualización del username");
+                            //throw new BankingExceptions("Ya existe un usuario con el dni " + userDto.getDni() + ", imposible realizar la actualización del username");
+                            throw new UserExistingExceptions("Ya existe un usuario con el dni " + userDto.getDni() + ", no se puede crear el usuario");
                         }
                     }else{
                         user.setDni(userDto.getDni());
@@ -170,10 +181,12 @@ public class UserService{
                 userRepository.save(user);
                 return UserMapper.userToDtoMap(user);
             }else{
-                throw new BankingExceptions("El usuario se encuentra inactivo, imposible actualizar");
+                //throw new BankingExceptions("El usuario se encuentra inactivo, imposible actualizar");
+                throw new UserInactiveExceptions("El usuario se encuentra inactivo, imposible actualizar");
             }
         }else{
-            throw new BankingExceptions("No existe el usuario con el id " + id + ", no se puede actualizar el usuario");
+            //throw new BankingExceptions("No existe el usuario con el id " + id + ", no se puede actualizar el usuario");
+            throw  new UserNotFoundExceptions("No existe el usuario con el id " + id + ", no se puede actualizar el usuario");
         }
     }
 
@@ -186,6 +199,7 @@ public class UserService{
             }else{
                 del.setActivo(false);
                 del.setUsername("inactivo"+id);
+                del.setUpdate_at(LocalDateTime.now());
                 userRepository.save(del);
                 return true;
             }

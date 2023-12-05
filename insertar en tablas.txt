@@ -1,0 +1,27 @@
+//CREAR USUARIOS
+
+    "name": "Ariel  Barotto",
+    "password": "ariel123",
+    "username": "arielba",
+    "address": "1 de mayo 951",
+    "dni": 34568987,
+    "birthday": "1983/02/26",
+    "mail": "ariel@mail.com"
+
+    
+    "name": "Cecilia",
+    "password": "ceci456",
+    "username": "ceci",
+    "address": "San Martin 100",
+    "dni": 40587964,
+    "birthday": "1993/12/10",
+    "mail": "cecilia@mail.com"
+
+
+    "name": "Martin Reichel",
+    "password": "martin989",
+    "username": "tincho",
+    "address": "Belgrano 200",
+    "dni": 25987456,
+    "birthday": "1993/12/10",
+    "mail": "martin@mail.com"

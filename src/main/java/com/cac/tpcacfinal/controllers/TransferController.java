@@ -36,7 +36,7 @@ public class TransferController {
     public ResponseEntity<TransferDto> createdTransfer(@RequestBody TransferDto transfer){
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(service.createTransfer(transfer));
-        }catch(BankingExceptions e){
+        }catch(RuntimeException e){
             //e.printStackTrace();
             System.out.println("Exception: " + e.getMessage());
             return null;
@@ -47,8 +47,8 @@ public class TransferController {
     public ResponseEntity<TransferDto> dollarSales(@RequestBody TransferDto transfer){
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(service.dollarSales(transfer));
-        }catch (BankingExceptions e){
-            System.out.println("Exception: " + e.getMessage());
+        }catch (RuntimeException e){
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
             return null;
         }
     }
@@ -56,24 +56,9 @@ public class TransferController {
     public ResponseEntity<TransferDto> dollarPurchase(@RequestBody TransferDto transfer){
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(service.dollarPurchase(transfer));
-        }catch (BankingExceptions e){
-            System.out.println("Exception: " + e.getMessage());
+        }catch (RuntimeException e){
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
             return null;
         }
-    }
-
-    @PutMapping
-    public ResponseEntity<TransferDto> updateTranfer(@PathVariable Long id, @RequestBody TransferDto transfer){
-        try{
-            return ResponseEntity.status(HttpStatus.CREATED).body(service.createTransfer(transfer));
-        }catch (BankingExceptions e){
-            System.out.println("Exception: " + e.getMessage());
-            return null;
-        }
-    }
-
-    @DeleteMapping (value = "/{id}")
-    public boolean deleteTranfer(@PathVariable Long id){
-        return false;
     }
 }
