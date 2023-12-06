@@ -46,64 +46,55 @@ public class TransferService {
         }
     }
 
+    @Transactional
     public TransferDto dollarSales(TransferDto transfer){
         if ((transfer.getAmount()==null)||(transfer.getAmount().compareTo(BigDecimal.ZERO)<1)){
             throw new BankingExceptions("El monto a transferir deber ser mayor que cero, imposible realizar la transacción");
-        }else{
-            if ((transfer.getOriginAccount()==null)||(transfer.getDestinedAccount()==null)) {
-                throw new BankingExceptions("Debe indicar las cuentas origen y destino de la transferencia, imposible gnerar la transferencia");
-            }else{
-                if (!((accountRepository.existsById(transfer.getOriginAccount().getId())) && (accountRepository.existsById(transfer.getDestinedAccount().getId())))){
-                    //throw new BankingExceptions("Una de las cuentas no existe, imposible realizar la transferencia");
-                    throw new AccountNotFoundExceptions("Una de las cuentas no existe, imposible realizar la transferencia");
-                }else{
-                    if (transfer.getOriginAccount().getId()==transfer.getDestinedAccount().getId()){
-                        throw new BankingExceptions("Las cuentas origen y destino no pueden ser las mismas, imposible generar la transferencia");
-                    }else{
-                        Account origen = accountRepository.findById(transfer.getOriginAccount().getId()).get();
-                        if (!origen.getActive()){
-                            //throw new BankingExceptions("La cuenta origen no se encuentra activa, imposible realizar la transferencia");
-                            throw new AccountInactiveExceptions("La cuenta origen no se encuentra activa, imposible realizar la transferencia");
-                        }else {
-                            if ((origen.getType()==AccountType.CAJA_AHORRO)||(origen.getType()==AccountType.CUENTA_CORRIENTE)) {
-                                throw new BankingExceptions("Para la venta de dólares la cuenta origen debe ser un cuenta en dólares, imposible realizar la transferencia");
-                            }else{
-                                if (origen.getAmount().compareTo(transfer.getAmount()) < 0) {
-                                    throw new BankingExceptions("La cuenta no posee fondos suficientes, imposible realizar la transferencia");
-                                } else {
-                                    Account destino = accountRepository.findById(transfer.getDestinedAccount().getId()).get();
-                                    if (!destino.getActive()) {
-                                        //throw new BankingExceptions("La cuenta destino no se encuentra activa, imposible realizar la transferencia");
-                                        throw new AccountInactiveExceptions("La cuenta destino no se encuentra activa, imposible realizar la transferencia");
-                                    }else{
-                                        if ((destino.getType()==AccountType.CAJA_AHORRO_USD)||(destino.getType()==AccountType.CUENTA_CORRIENTE_USD)){
-                                            throw new BankingExceptions("Para la venta de moneda extranjera, la cuenta destino no puede ser una cuenta en dólares");
-                                        }else{
-                                            Transfer nueva = new Transfer();
-                                            nueva.setDate(LocalDateTime.now());
-                                            nueva.setOriginAccount(origen);
-                                            nueva.setDestinedAccount(destino);
-                                            BigDecimal cotizacion = new BigDecimal(dolarService.getDolarOficial().getCompra());
-                                            nueva.setDescription("Operación de venta, cotización: $" + cotizacion);
-                                            BigDecimal importeDolar = transfer.getAmount().multiply(cotizacion);
-                                            nueva.setAmount(importeDolar);
-                                            transferRepository.save(nueva);
-                                            origen.setAmount(origen.getAmount().subtract(transfer.getAmount()));
-                                            destino.setAmount(destino.getAmount().add(importeDolar));
-                                            origen.setUpdate_at(LocalDateTime.now());
-                                            destino.setUpdate_at(LocalDateTime.now());
-                                            accountRepository.save(origen);
-                                            accountRepository.save(destino);
-                                            return TransferMapper.transferToDtoMap(nueva);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
+        if ((transfer.getOriginAccount()==null)||(transfer.getDestinedAccount()==null)) {
+            throw new BankingExceptions("Debe indicar las cuentas origen y destino de la transferencia, imposible gnerar la transferencia");
+        }
+        if (!((accountRepository.existsById(transfer.getOriginAccount().getId())) && (accountRepository.existsById(transfer.getDestinedAccount().getId())))){
+            //throw new BankingExceptions("Una de las cuentas no existe, imposible realizar la transferencia");
+            throw new AccountNotFoundExceptions("Una de las cuentas no existe, imposible realizar la transferencia");
+        }
+        if (transfer.getOriginAccount().getId()==transfer.getDestinedAccount().getId()) {
+            throw new BankingExceptions("Las cuentas origen y destino no pueden ser las mismas, imposible generar la transferencia");
+        }
+        Account origen = accountRepository.findById(transfer.getOriginAccount().getId()).get();
+        if (!origen.getActive()){
+            //throw new BankingExceptions("La cuenta origen no se encuentra activa, imposible realizar la transferencia");
+            throw new AccountInactiveExceptions("La cuenta origen no se encuentra activa, imposible realizar la transferencia");
+        }
+        if ((origen.getType()==AccountType.CAJA_AHORRO)||(origen.getType()==AccountType.CUENTA_CORRIENTE)) {
+            throw new BankingExceptions("Para la venta de dólares la cuenta origen debe ser un cuenta en dólares, imposible realizar la transferencia");
+        }
+        if (origen.getAmount().compareTo(transfer.getAmount()) < 0) {
+            throw new BankingExceptions("La cuenta no posee fondos suficientes, imposible realizar la transferencia");
+        }
+        Account destino = accountRepository.findById(transfer.getDestinedAccount().getId()).get();
+        if (!destino.getActive()) {
+            throw new AccountInactiveExceptions("La cuenta destino no se encuentra activa, imposible realizar la transferencia");
+        }
+        if ((destino.getType()==AccountType.CAJA_AHORRO_USD)||(destino.getType()==AccountType.CUENTA_CORRIENTE_USD)){
+            throw new BankingExceptions("Para la venta de moneda extranjera, la cuenta destino no puede ser una cuenta en dólares");
+        }
+        Transfer nueva = new Transfer();
+        nueva.setDate(LocalDateTime.now());
+        nueva.setOriginAccount(origen);
+        nueva.setDestinedAccount(destino);
+        BigDecimal cotizacion = new BigDecimal(dolarService.getDolarOficial().getCompra());
+        nueva.setDescription("Operación de venta, cotización: $" + cotizacion);
+        BigDecimal importeDolar = transfer.getAmount().multiply(cotizacion);
+        nueva.setAmount(importeDolar);
+        transferRepository.save(nueva);
+        origen.setAmount(origen.getAmount().subtract(transfer.getAmount()));
+        destino.setAmount(destino.getAmount().add(importeDolar));
+        origen.setUpdate_at(LocalDateTime.now());
+        destino.setUpdate_at(LocalDateTime.now());
+        accountRepository.save(origen);
+        accountRepository.save(destino);
+        return TransferMapper.transferToDtoMap(nueva);
     }
     @Transactional
     public TransferDto dollarPurchase(TransferDto transfer){

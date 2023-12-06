@@ -9,4 +9,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Account findAccountByCbu(String cbu);
     Account findAccountByAlias(String alias);
+
 }
