@@ -52,9 +52,7 @@ public class AccountService {
 
 
     public Boolean enterCash(Long id, TransferDto dto){
-        if ((dto.getAmount()==null)||(dto.getAmount().compareTo(BigDecimal.ZERO)<0)){
-            throw new BankingExceptions("El importe a ingresar debe ser mayor que cero");
-        }else{
+        if ((dto.getAmount()!=null)&&(dto.getAmount().compareTo(BigDecimal.ZERO)>0)){
             if (accountRepository.existsById(id)){
                 Account account = accountRepository.findById(id).get();
                 if (account.getActive()){
@@ -68,13 +66,13 @@ public class AccountService {
             }else{
                 return false;
             }
+        }else{
+            throw new BankingExceptions("El importe a ingresar debe ser mayor que cero");
         }
     }
 
     public Boolean extractCash(Long id, TransferDto dto){
-        if ((dto.getAmount()==null)||(dto.getAmount().compareTo(BigDecimal.ZERO)<0)){
-            throw new BankingExceptions("El importe a extraer debe ser mayor que cero");
-        }else{
+        if ((dto.getAmount()!=null)&&(dto.getAmount().compareTo(BigDecimal.ZERO)>0)){
             if (accountRepository.existsById(id)){
                 Account account = accountRepository.findById(id).get();
                 if (account.getActive() && (dto.getAmount().compareTo(account.getAmount())<=0)){
@@ -88,39 +86,40 @@ public class AccountService {
             }else{
                 return false;
             }
+        }else{
+            throw new BankingExceptions("El importe a extraer debe ser mayor que cero");
         }
     }
 
     public AccountDto createAccount(AccountDto dto){
-        if ((dto.getAlias()==null) || (dto.getType()==null) || dto.getUser()==null){
-            throw new BankingExceptions("Los datos Alias, Usuario y tipo de cuenta son obligatorios, imposible crear la cuenta");
-        }else {
-            if (!userRepository.existsById(dto.getUser().getId())){
-                throw new UserNotFoundExceptions("La cuenta debe pertenecer a un cliente del Banco");
-            }else{
+        if ((dto.getAlias()!=null) && (dto.getType()!=null) && dto.getUser()!=null){
+            if (userRepository.existsById(dto.getUser().getId())){
                 User user = userRepository.findById(dto.getUser().getId()).get();
-                if (!user.getActivo()){
-                    throw  new UserInactiveExceptions("La cuenta de pertenecer a un cliente activo");
+                if (user.getActivo()){
+                    if (!exitsAccountByAlias(dto.getAlias())) {
+                        Account account = AccountMapper.dtoToAccountMap(dto);
+                        account.setActive(true);
+                        account.setCbu(generarCBU());
+                        account.setAmount(BigDecimal.ZERO);
+                        account.setCreated_at(LocalDateTime.now());
+                        account.setUpdate_at(LocalDateTime.now());
+                        account.setUser(userRepository.findById(dto.getUser().getId()).get());
+                        Account nueva = accountRepository.save(account);
+                        dto = AccountMapper.accountToDtoMap(nueva);
+                        dto.getUser().setPassword("*********");
+                        return dto;
+                    } else {
+                        throw new AccountExistingExceptions("Ya existe una cuenta con el ALIAS: " + dto.getAlias() + ", imposible crear la cuenta");
+                    }
+                }else{
+                    throw  new UserInactiveExceptions("La cuenta debe pertenecer a un cliente activo");
                 }
+            }else{
+                throw new UserNotFoundExceptions("La cuenta debe pertenecer a un cliente del Banco");
             }
-            if (exitsAccountByAlias(dto.getAlias())) {
-                //throw new BankingExceptions("Ya existe una cuenta con el ALIAS: " + dto.getAlias() + ", imposible crear la cuenta");
-                throw new AccountExistingExceptions("Ya existe una cuenta con el ALIAS: " + dto.getAlias() + ", imposible crear la cuenta");
-            } else {
-                Account account = AccountMapper.dtoToAccountMap(dto);
-                account.setActive(true);
-                account.setCbu(generarCBU());
-                account.setAmount(BigDecimal.ZERO);
-                account.setCreated_at(LocalDateTime.now());
-                account.setUpdate_at(LocalDateTime.now());
-                account.setUser(userRepository.findById(dto.getUser().getId()).get());
-                Account nueva = accountRepository.save(account);
-                dto = AccountMapper.accountToDtoMap(nueva);
-                dto.getUser().setPassword("*********");
-                return dto;
-            }
+        }else{
+            throw new BankingExceptions("Los datos Alias, Usuario y tipo de cuenta son obligatorios, imposible crear la cuenta");
         }
-
     }
 
     public AccountDto updateAccount(Long id, AccountDto dto){
@@ -129,19 +128,15 @@ public class AccountService {
             if (account.getActive()){
                 if (dto.getAlias()!= null){
                     AccountDto alias = findByAlias(dto.getAlias());
-                    if (alias != null){
-                        if (dto.getId()!=alias.getId()){
-                            //throw new BankingExceptions("Ya existe una cuenta con el el ALIAS: " + dto.getAlias() + ", imposible crear la cuenta");
-                            throw new AccountExistingExceptions("Ya existe una cuenta con el el ALIAS: " + dto.getAlias() + ", imposible crear la cuenta");
-                        }else{
-                            account.setAlias(dto.getAlias());
-                        }
-                    }else{
+                    if (alias == null){
                         account.setAlias(dto.getAlias());
+                    }else{
+                        if (dto.getId()!=alias.getId()){
+                            throw new AccountExistingExceptions("Ya existe una cuenta con el el ALIAS: " + dto.getAlias() + ", imposible crear la cuenta");
+                        }
                     }
                 }
             }else{
-                //throw new BankingExceptions("La cuenta no está activa, imposible actualizar");
                 throw new AccountInactiveExceptions("La cuenta no está activa, imposible actualizar");
             }
             account.getUser().setPassword("*********");
@@ -149,38 +144,6 @@ public class AccountService {
             accountRepository.save(account);
             return AccountMapper.accountToDtoMap(account);
         }else {
-            //throw  new BankingExceptions("No existe una cuenta con el id + " + id + ", imposible actualizar la cuenta");
-            throw new AccountNotFoundExceptions("No existe una cuenta con el id " + id + ", imposible actualizar la cuenta");
-        }
-    }
-    public AccountDto updateAccountFull(Long id, AccountDto dto){
-        if (accountRepository.existsById(id)){
-            if ((dto.getAlias()==null) || (dto.getType()==null)){
-                throw new BankingExceptions("Los Alias y tipo de cuenta son obligatorios, imposible actualizar la cuenta");
-            }else {
-                Account account = accountRepository.findById(id).get();
-                if (account.getActive()){
-                    AccountDto alias = findByAlias(dto.getAlias());
-                    if (alias != null){
-                        if (dto.getId()!=alias.getId()){
-                            //throw new BankingExceptions("Ya existe una cuenta con el el ALIAS: " + dto.getAlias() + ", imposible crear la cuenta");
-                            throw new AccountExistingExceptions("Ya existe una cuenta con el el ALIAS: " + dto.getAlias() + ", imposible crear la cuenta");
-                        }else{
-                            account.setAlias(dto.getAlias());
-                        }
-                    }else{
-                        account.setAlias(dto.getAlias());
-                    }
-                    account.setUpdate_at(LocalDateTime.now());
-                    accountRepository.save(account);
-                    return AccountMapper.accountToDtoMap(account);
-                }else{
-                    //throw new BankingExceptions("La cuenta no está activa, imposible actualizar");
-                    throw new AccountInactiveExceptions("La cuenta no está activa, imposible actualizar");
-                }
-            }
-        }else {
-            //throw new BankingExceptions("No existe una cuenta con el id + " + id + ", imposible actualizar la cuenta");
             throw new AccountNotFoundExceptions("No existe una cuenta con el id " + id + ", imposible actualizar la cuenta");
         }
     }

@@ -25,3 +25,39 @@
     "dni": 25987456,
     "birthday": "1993/12/10",
     "mail": "martin@mail.com"
+
+//UPDATEFULL USER
+
+    "name": "Cecilia",
+    "password": "ceci456",
+    "username": "ceciLIA",
+    "address": "San Martin 500",
+    "dni": 40587964,
+    "birthday": "1993/12/10",
+    "mail": "cecilia@mail.com"
+
+// CREAR CUENTAS
+
+    "alias": "ariel.pesos",
+    "type": 0,
+    "user": {
+        "id": 1
+    }
+
+    "alias": "ceci.pesos",
+    "type": 1,
+    "user": {
+        "id": 2
+    }
+
+    "alias": "martin.dolares",
+    "type": 2,
+    "user": {
+        "id": 3
+    }
+
+    "alias": "ariel.dolares",
+    "type": 3,
+    "user": {
+        "id": 1
+    }

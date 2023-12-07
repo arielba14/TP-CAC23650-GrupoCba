@@ -49,16 +49,6 @@ public class AccountController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AccountDto> updateAccountFull(@PathVariable Long id, @RequestBody AccountDto account){
-        try{
-            return ResponseEntity.status(HttpStatus.CREATED).body(accountService.updateAccountFull(id, account));
-        }catch(RuntimeException e){
-            System.out.println(e.getClass().getName() + ": " + e.getMessage());
-            return null;
-        }
-    }
-
     @PatchMapping("/{id}")
     public ResponseEntity<AccountDto> updateAccount(@PathVariable Long id, @RequestBody AccountDto account){
         try{
