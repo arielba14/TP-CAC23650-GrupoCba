@@ -70,6 +70,9 @@ public class TransferService {
         if (!origen.getActive()||!destino.getActive()){
             throw new AccountInactiveExceptions("Una de las cuentas no se encuentra activa, imposible realizar la transferencia");
         }
+        if (origen.getAmount().compareTo(transfer.getAmount())<0){
+            throw new BankingExceptions("La cuenta origen no posee fondos suficientes, imposible realziar la transferencia");
+        }
         switch (tipo){
             case 0:
                 if ((origen.getType()==AccountType.CAJA_AHORRO_USD)||(origen.getType()==AccountType.CUENTA_CORRIENTE_USD)){
@@ -136,7 +139,7 @@ public class TransferService {
                 nueva.setDate(LocalDateTime.now());
                 nueva.setOriginAccount(origen);
                 nueva.setDestinedAccount(destino);
-                BigDecimal cotizacion = new BigDecimal(dolarService.getDolarSolidario().getVenta());
+                BigDecimal cotizacion = new BigDecimal(dolarService.getDolarSolidario().getVenta()).setScale(2, RoundingMode.HALF_UP);
                 nueva.setDescription("Operación de compra, cotización: $" + cotizacion);
                 BigDecimal importeDolar = transfer.getAmount().divide(cotizacion,2, RoundingMode.HALF_UP);
                 nueva.setAmount(importeDolar);

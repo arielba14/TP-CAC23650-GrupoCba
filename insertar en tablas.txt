@@ -61,3 +61,23 @@
     "user": {
         "id": 1
     }
+
+// TRANSFERENCIAS ENTRE CUENTAS EN PESOS
+    "amount": "30000",
+    "description": "ventas",
+    "originAccount":{
+        "id": 1
+    },
+    "destinedAccount":{
+        "id": 2
+    }
+
+// COMPRA DE DOLARES
+    "amount": 100000,
+    "originAccount":{"id":1},
+    "destinedAccount":{"id":4}
+
+// VENTA DE DOLARES
+    "amount": 100000,
+    "originAccount":{"id":4},
+    "destinedAccount":{"id":1}
